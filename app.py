@@ -1,16 +1,21 @@
+import pandas as pd
 from flask import Flask, request, render_template, jsonify, url_for, redirect
 import json
 import time
 from datetime import datetime
-from models import init_db, add_case, get_all_cases, get_case, update_case, delete_case
+from werkzeug.utils import secure_filename
+from models import init_db, add_case, get_all_cases, get_case, update_case, delete_case, add_data_source, \
+    get_all_data_sources
 from models import add_test_run, get_test_runs, get_run_detail, get_run_statistics
 from core.api_test_runner import APITestRunner
 from core.utils import generate_html_report
 from config import DEBUG
+from config import UPLOAD_FOLDER
+import os
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
-
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # 初始化数据库
 init_db()
 
@@ -30,9 +35,12 @@ def new_case():
         expected_status = int(request.form['expected_status'])
         expected_body = request.form.get('expected_body', '')
         description = request.form.get('description', '')
-        add_case(name, method, url, headers, body, expected_status, expected_body, description)
+        data_source_id = request.form.get('data_source_id', None)
+        data_mapping = request.form.get('data_mapping', '')
+        add_case(name, method, url, headers, body, expected_status, expected_body, description,data_source_id,data_mapping)
         return redirect('/')
-    return render_template('case_form.html', case=None)
+    data_sources = get_all_data_sources()
+    return render_template('case_form.html', case=None,data_sources=data_sources)
 
 @app.route('/case/<int:case_id>', methods=['GET', 'POST'])
 def edit_case(case_id):
@@ -46,9 +54,13 @@ def edit_case(case_id):
         expected_status = int(request.form['expected_status'])
         expected_body = request.form.get('expected_body', '')
         description = request.form.get('description', '')
-        update_case(case_id, name, method, url, headers, body, expected_status, expected_body, description)
+        description = request.form.get('description', '')
+        data_source_id = request.form.get('data_source_id', None)
+        data_mapping = request.form.get('data_mapping', '')
+        update_case(case_id, name, method, url, headers, body, expected_status, expected_body, description,data_source_id,data_mapping)
         return redirect('/')
-    return render_template('case_form.html', case=case)
+    data_sources = get_all_data_sources()
+    return render_template('case_form.html', case=case,data_sources = data_sources)
 
 @app.route('/case/<int:case_id>/delete')
 def delete_case_route(case_id):
@@ -125,5 +137,33 @@ def view_report(run_id):
         return redirect(report_url)
     return "报告不存在", 404
 
+# 在 app.py 中添加上传路由
+@app.route('/data_source/new', methods=['GET', 'POST'])
+def upload_data_source():
+    if request.method == 'POST':
+        name = request.form['name']
+        file = request.files['file']
+        if file and (file.filename.endswith('.csv') or file.filename.endswith('.xlsx')):
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)
+
+            # 读取列名
+            if filename.endswith('.csv'):
+                df = pd.read_csv(file_path)
+            else:
+                df = pd.read_excel(file_path)
+            columns = df.columns.tolist()
+
+            # 存入数据库
+            add_data_source(name, file_path, json.dumps(columns))
+            return redirect('/data_sources')
+    return render_template('upload_data.html')
+
+
+@app.route('/data_sources')
+def list_data_sources():
+    sources = get_all_data_sources()
+    return render_template('data_sources.html', sources=sources)
 if __name__ == '__main__':
     app.run(debug=DEBUG)

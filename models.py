@@ -42,6 +42,24 @@ def init_db():
             FOREIGN KEY(case_id) REFERENCES test_cases(id)
         )
     ''')
+
+    c.execute('''
+          CREATE TABLE IF NOT EXISTS data_sources (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              name TEXT NOT NULL,
+              file_path TEXT NOT NULL,
+              columns TEXT,          -- JSON 数组，存储列名
+              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          )
+      ''')
+    try:
+        c.execute('ALTER TABLE test_cases ADD COLUMN data_source_id INTEGER')
+    except:
+        pass
+    try:
+        c.execute('ALTER TABLE test_cases ADD COLUMN data_mapping TEXT')  # 例如 {"username":"col1","password":"col2"}
+    except:
+        pass
     conn.commit()
     conn.close()
 
@@ -136,3 +154,26 @@ def get_run_statistics(days=30):
     ''', (f'-{days} days',)).fetchall()
     conn.close()
     return [{'date': r['run_date'], 'total': r['total'], 'passed': r['passed']} for r in rows]
+
+# 数据源管理
+def add_data_source(name, file_path, columns):
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute('INSERT INTO data_sources (name, file_path, columns) VALUES (?, ?, ?)',
+              (name, file_path, columns))
+    conn.commit()
+    source_id = c.lastrowid
+    conn.close()
+    return source_id
+
+def get_all_data_sources():
+    conn = get_db_connection()
+    sources = conn.execute('SELECT * FROM data_sources ORDER BY id DESC').fetchall()
+    conn.close()
+    return sources
+
+def get_data_source(source_id):
+    conn = get_db_connection()
+    source = conn.execute('SELECT * FROM data_sources WHERE id = ?', (source_id,)).fetchone()
+    conn.close()
+    return source

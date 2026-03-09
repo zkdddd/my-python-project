@@ -70,6 +70,15 @@
             <input type="number" name="expected_status" value="{{ case.expected_status if case else 200 }}" required>
             <label>期望响应体 (JSON格式，用于比对，可选)</label>
             <textarea name="expected_body" rows="5">{{ case.expected_body if case else '' }}</textarea>
+            <select name="data_source_id">
+                <option value="">无数据源</option>
+                {% for ds in data_source %}
+                <option value="{{ ds.id }}" {% if case and case.data_source_id == ds.id %}selected{% endif %}>{{ ds.name }}</option>
+                {% endfor %}
+                <label>字段映射（JSON格式，例如 {"username":"用户名","password":"密码"}）</label>
+                <textarea name="data_mapping" rows="3">{{ case.data_mapping if case else '' }}</textarea>
+            </select>
+
         </fieldset>
 
         <fieldset>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>上传数据源</title>
+</head>
+<body>
+    <h1>上传数据源文件</h1>
+    <form method="post" enctype="multipart/form-data">
+        <label>数据源名称</label>
+        <input type="text" name="name" required><br>
+        <label>选择文件（CSV/Excel）</label>
+        <input type="file" name="file" accept=".csv,.xlsx" required><br>
+        <button type="submit">上传</button>
+    </form>
+    <p><a href="/data_sources">返回列表</a></p>
+</body>
+</html>
