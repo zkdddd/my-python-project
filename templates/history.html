@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>测试历史</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .chart-container {
+            width: 600px;
+            margin: 30px auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #2094f3;
+            color: white;
+        }
+        .pass {
+            color: green;
+            font-weight: bold;
+        }
+        .fail {
+            color: red;
+            font-weight: bold;
+        }
+        a {
+            text-decoration: none;
+            color: #2196F3;
+        }
+        p {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>📜 测试历史记录</h1>
+    <div class="chart-container">
+        <canvas id="trendChart"></canvas>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>用例名称</th>
+                <th>状态</th>
+                <th>响应码</th>
+                <th>开始时间</th>
+                <th>耗时(秒)</th>
+                <th>报告</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for run in runs %}
+            <tr>
+                <td>{{ run.id }}</td>
+                <td>{{ run.case_name }}</td>
+                <td class="{{ 'pass' if run.status == 'PASS' else 'fail' }}">{{ run.status }}</td>
+                <td>{{ run.response_status }}</td>
+                <td>{{ run.start_time }}</td>
+                <td>{{ run.duration }}</td>
+                <td>
+                    {% if run.report_path %}
+                        <a href="{{ url_for('static', filename='reports/' + run.report_path) }}" target="_blank">查看</a>
+                    {% else %}
+                        无
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7">暂无运行记录</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><a href="/">返回首页</a></p>
+
+    <script>
+        // 绘制趋势图
+        var ctx = document.getElementById('trendChart').getContext('2d');
+        var stats = {{ stats|tojson }};
+        var dates = stats.map(s => s.date);
+        var passRates = stats.map(s => (s.total > 0 ? (s.passed / s.total * 100).toFixed(1) : 0));
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: '通过率 (%)',
+                    data: passRates,
+                    borderColor: '#4CAF50',
+                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { min: 0, max: 100 }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

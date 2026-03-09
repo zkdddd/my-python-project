@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>测试报告 #2</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; }
+        .summary { background: #f0f0f0; padding: 20px; border-radius: 8px; }
+        .pass { color: green; }
+        .fail { color: red; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #4CAF50; color: white; }
+        tr:hover { background: #f5f5f5; }
+        .detail { background: #eee; padding: 10px; display: none; }
+    </style>
+</head>
+<body>
+    <h1>接口自动化测试报告 #2</h1>
+    <div class="summary">
+        <p>运行时间: 2026-03-06 16:28:25 至 2026-03-06 16:28:26</p>
+        <p>总计: 1 | 通过: <span class="pass">0</span> | 失败: <span class="fail">1</span> | 通过率: 0.0%</p>
+    </div>
+    <table>
+        <thead>
+            <tr><th>用例名称</th><th>状态</th><th>响应码</th><th>耗时(秒)</th><th>详情</th></tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>test</td>
+                <td class="fail">FAIL</td>
+                <td>200</td>
+                <td>0.834</td>
+                <td><button onclick="toggle('detail_1')">查看</button></td>
+            </tr>
+            <tr id="detail_1" class="detail">
+                <td colspan="5">
+                    <pre>错误信息: 响应体差异: 实际/期望值为空</pre>
+                    <pre>响应体: {
+  "userId": 1,
+  "id": 1,
+  "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+  "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+}</pre>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <script>
+        function toggle(id) {
+            var el = document.getElementById(id);
+            if (el.style.display === 'none' || el.style.display === '') {
+                el.style.display = 'table-row';
+            } else {
+                el.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

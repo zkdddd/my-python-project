@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title >接口自动化测试平台</title>
+    <style>
+        .page-title{
+            color:white;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .navbar {
+            background-color: #2094f3;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            margin-top: 0;
+        }
+        .btn {
+            padding: 8px 15px;
+            background:#2094f3;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .btn-danger {
+            background: #f44336;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #2094f3;
+            color: white;
+        }
+        tr:hover {
+            background: #f5f5f5;
+        }
+        .actions a {
+            margin-right: 10px;
+        }
+        #runBtn {
+            margin: 20px 0;
+        }
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background: #2094f3;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1 class="page-title">接口自动化测试平台</h1>
+        <div>
+            <a href="/case/new" class="btn">新建用例</a>
+            <a href="/history" class="btn">查看历史记录</a>
+        </div>
+    </nav>
+    <div class="container">
+        <button id="runBtn" class="btn">运行选中用例</button>
+        <table>
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="selectAll"></th>
+                    <th>ID</th>
+                    <th>用例名称</th>
+                    <th>方法</th>
+                    <th>URL</th>
+                    <th>期望状态码</th>
+                    <th>描述</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for case in cases %}
+                <tr>
+                    <td><input type="checkbox" name="case_ids" value="{{ case.id }}" class="case-check"></td>
+                    <td>{{ case.id }}</td>
+                    <td>{{ case.name }}</td>
+                    <td>{{ case.method }}</td>
+                    <td>{{ case.url[:50] }}{% if case.url|length > 50 %}...{% endif %}</td>
+                    <td>{{ case.expected_status }}</td>
+                    <td>{{ case.description or '' }}</td>
+                    <td class="actions">
+                        <a href="/case/{{ case.id }}">编辑</a>
+                        <a href="/case/{{ case.id }}/delete" onclick="return confirm('确定删除？')">删除</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="8">暂无用例，请先创建。</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div id="result" style="margin-top: 20px;"></div>
+    </div>
+
+    <footer>
+        &copy; 2026 接口自动化测试平台
+    </footer>
+
+    <script>
+        // 全选/取消全选
+        document.getElementById('selectAll').addEventListener('change', function(e) {
+            var checkboxes = document.querySelectorAll('.case-check');
+            for (var cb of checkboxes) {
+                cb.checked = e.target.checked;
+            }
+        });
+
+        // 运行选中用例
+        document.getElementById('runBtn').addEventListener('click', function() {
+            var selected = [];
+            var checkboxes = document.querySelectorAll('.case-check:checked');
+            for (var cb of checkboxes) {
+                selected.push(cb.value);
+            }
+            if (selected.length === 0) {
+                alert('请至少选择一个用例');
+                return;
+            }
+            var formData = new FormData();
+            for (var id of selected) {
+                formData.append('case_ids', id);
+            }
+            fetch('/run', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.report_url) {
+                    // 在新窗口打开报告
+                    window.open(data.report_url, '_blank');
+                } else {
+                    alert('运行失败：' + data.error);
+                }
+            })
+            .catch(err => alert('请求失败：' + err));
+        });
+    </script>
+</body>
+</html>

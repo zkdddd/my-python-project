@@ -1,0 +1,83 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <list>
+          <option value="aiofiles" />
+          <option value="aiohappyeyeballs" />
+          <option value="aiohttp" />
+          <option value="aiosignal" />
+          <option value="annotated-types" />
+          <option value="anyio" />
+          <option value="attrs" />
+          <option value="bidict" />
+          <option value="certifi" />
+          <option value="charset-normalizer" />
+          <option value="click" />
+          <option value="colorama" />
+          <option value="docutils" />
+          <option value="et_xmlfile" />
+          <option value="fastapi" />
+          <option value="frozenlist" />
+          <option value="h11" />
+          <option value="httpcore" />
+          <option value="httptools" />
+          <option value="httpx" />
+          <option value="idna" />
+          <option value="ifaddr" />
+          <option value="itsdangerous" />
+          <option value="Jinja2" />
+          <option value="markdown2" />
+          <option value="MarkupSafe" />
+          <option value="multidict" />
+          <option value="nicegui" />
+          <option value="numpy" />
+          <option value="openpyxl" />
+          <option value="orjson" />
+          <option value="pandas" />
+          <option value="propcache" />
+          <option value="pscript" />
+          <option value="pydantic" />
+          <option value="pydantic_core" />
+          <option value="Pygments" />
+          <option value="python-dateutil" />
+          <option value="python-dotenv" />
+          <option value="python-engineio" />
+          <option value="python-multipart" />
+          <option value="python-socketio" />
+          <option value="pytz" />
+          <option value="PyYAML" />
+          <option value="requests" />
+          <option value="simple-websocket" />
+          <option value="six" />
+          <option value="sniffio" />
+          <option value="starlette" />
+          <option value="typing-inspection" />
+          <option value="typing_extensions" />
+          <option value="tzdata" />
+          <option value="urllib3" />
+          <option value="uvicorn" />
+          <option value="vbuild" />
+          <option value="watchfiles" />
+          <option value="websockets" />
+          <option value="wsproto" />
+          <option value="XlsxWriter" />
+          <option value="yarl" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="int.*" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="SpellCheckingInspection" enabled="false" level="TYPO" enabled_by_default="false">
+      <option name="processCode" value="true" />
+      <option name="processLiterals" value="true" />
+      <option name="processComments" value="true" />
+    </inspection_tool>
+  </profile>
+</component>

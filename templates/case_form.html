@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% if case %}编辑用例{% else %}新建用例{% endif %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #f4f4f4;
+        }
+        form {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label { display: block; margin-top: 15px; font-weight: bold; }
+        input[type=text], input[type=url], textarea, select { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; }
+        textarea { font-family: monospace; }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #2094f3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .back {
+            margin-top: 20px;
+            display: inline-block;
+            text-decoration: none;
+            color: #2094f3;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; margin-bottom: 20px;">{% if case %}编辑用例 #{{ case.id }}{% else %}新建用例{% endif %}</h1>
+    <form method="post">
+        <fieldset>
+            <legend>基本信息</legend>
+            <label>用例名称</label>
+            <input type="text" name="name" value="{{ case.name if case else '' }}" required>
+        </fieldset>
+
+        <fieldset>
+            <legend>请求配置</legend>
+            <label>请求方法</label>
+            <select name="method">
+                <option value="GET" {% if case and case.method == 'GET' %}selected{% endif %}>GET</option>
+                <option value="POST" {% if case and case.method == 'POST' %}selected{% endif %}>POST</option>
+                <option value="PUT" {% if case and case.method == 'PUT' %}selected{% endif %}>PUT</option>
+                <option value="DELETE" {% if case and case.method == 'DELETE' %}selected{% endif %}>DELETE</option>
+            </select>
+            <label>URL</label>
+            <input type="url" name="url" value="{{ case.url if case else '' }}" required>
+            <label>请求头 (JSON格式，可选)</label>
+            <textarea name="headers" rows="3">{{ case.headers if case else '' }}</textarea>
+            <label>请求体 (JSON格式，可选)</label>
+            <textarea name="body" rows="5">{{ case.body if case else '' }}</textarea>
+        </fieldset>
+
+        <fieldset>
+            <legend>期望结果</legend>
+            <label>期望状态码</label>
+            <input type="number" name="expected_status" value="{{ case.expected_status if case else 200 }}" required>
+            <label>期望响应体 (JSON格式，用于比对，可选)</label>
+            <textarea name="expected_body" rows="5">{{ case.expected_body if case else '' }}</textarea>
+        </fieldset>
+
+        <fieldset>
+            <legend>其他信息</legend>
+            <label>描述</label>
+            <textarea name="description" rows="2">{{ case.description if case else '' }}</textarea>
+        </fieldset>
+
+        <button type="submit">保存</button>
+        <a href="/" class="back">返回</a>
+    </form>
+</body>
+</html>
