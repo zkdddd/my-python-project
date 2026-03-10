@@ -1,5 +1,7 @@
+import pandas as pd
 import requests
 import json
+import os
 import time
 from datetime import datetime
 from core.utils import safe_json_loads, compare_json
@@ -80,3 +82,52 @@ class APITestRunner:
         for case in cases:
             self.run_single(case)
         return self.results
+
+    def run_data_driven(self, template_case, data_rows, field_mapping):
+        """
+        数据驱动执行
+        :param template_case: 原始用例模板（字典）
+        :param data_rows: 数据行列表，每行是一个字典（列名->值）
+        :param field_mapping: 字段映射，例如 {"username":"user", "password":"pwd"}
+                              表示将模板中的 ${username} 替换为 data['user']
+        :return: 包含所有子结果的主结果字典
+        """
+        sub_results = []
+        overall_pass = True
+
+        for row in data_rows:
+            # 深拷贝模板，避免修改原数据
+            case_copy = template_case.copy()
+            # 替换请求体中的变量
+            if case_copy.get('body'):
+                body = case_copy['body']
+                for var_name, col_name in field_mapping.items():
+                    placeholder = f'${{{var_name}}}'
+                    if placeholder in body:
+                        # 从当前行数据中获取对应列的值，转为字符串
+                        val = str(row.get(col_name, ''))
+                        body = body.replace(placeholder, val)
+                case_copy['body'] = body
+
+            # 如果需要，也可以替换 URL 或 Headers 中的变量（类似逻辑）
+
+            # 执行单个请求（复用 run_single 方法）
+            sub_result = self.run_single(case_copy)
+            # 标记该子结果对应的数据行（可选，用于报告）
+            sub_result['data_row'] = row
+            sub_results.append(sub_result)
+
+            if sub_result['status'] != 'PASS':
+                overall_pass = False
+
+        # 构造主用例结果
+        main_result = {
+            'case_id': template_case['id'],
+            'case_name': template_case['name'] + ' [数据驱动]',
+            'status': 'PASS' if overall_pass else 'FAIL',
+            'sub_results': sub_results,
+            'start_time': sub_results[0]['start_time'] if sub_results else '',
+            'end_time': sub_results[-1]['end_time'] if sub_results else '',
+            'duration': sum(r['duration'] for r in sub_results)
+        }
+        return main_result

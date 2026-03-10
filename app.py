@@ -3,6 +3,8 @@ from flask import Flask, request, render_template, jsonify, url_for, redirect
 import json
 import time
 from datetime import datetime
+
+from multipart import file_path
 from werkzeug.utils import secure_filename
 from models import init_db, add_case, get_all_cases, get_case, update_case, delete_case, add_data_source, \
     get_all_data_sources
@@ -11,6 +13,8 @@ from core.api_test_runner import APITestRunner
 from core.utils import generate_html_report
 from config import DEBUG
 from config import UPLOAD_FOLDER
+from core.utils import load_data_from_source  # 导入新函数
+from models import get_data_source            # 确保已导入
 import os
 
 app = Flask(__name__)
@@ -54,7 +58,6 @@ def edit_case(case_id):
         expected_status = int(request.form['expected_status'])
         expected_body = request.form.get('expected_body', '')
         description = request.form.get('description', '')
-        description = request.form.get('description', '')
         data_source_id = request.form.get('data_source_id', None)
         data_mapping = request.form.get('data_mapping', '')
         update_case(case_id, name, method, url, headers, body, expected_status, expected_body, description,data_source_id,data_mapping)
@@ -86,12 +89,40 @@ def run_test():
             'headers': c['headers'],
             'body': c['body'],
             'expected_status': c['expected_status'],
-            'expected_body': c['expected_body']
+            'expected_body': c['expected_body'],
+            'data_source_id' : c['data_source_id'],#新增数据驱动
+            'data_mapping': c['data_mapping']
         })
 
     runner = APITestRunner()
     results = runner.run_batch(case_dicts)
 
+
+    for case in case_dicts:
+        if case.get('data_source_id'):
+            source = get_data_source(case['data_source_id'])
+            if not source:
+                continue
+            file_path = source['file_path']
+            try:
+                data_rows = load_data_from_source(file_path)
+            except Exception as e:
+                results.append({
+                    'case_id' :case['id'],
+                    'case_name': case['name'],
+                    'status': 'FAIL',
+                    'error_message': f"数据源加载失败:{str(e)}"
+                })
+                continue
+
+                # 解析字段映射（JSON字符串 -> 字典）
+            mapping = json.loads(case['data_mapping'] or '{}')
+            main_result = runner.run_data_driven(case, data_rows, mapping)
+            results.append(main_result)
+    else:
+        # 普通执行
+        result = runner.run_single(case)
+        results.append(result)
     # 保存运行记录到数据库
     run_ids = []
     for r in results:

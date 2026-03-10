@@ -64,13 +64,13 @@ def init_db():
     conn.close()
 
 # ---------- 用例操作 ----------
-def add_case(name, method, url, headers, body, expected_status, expected_body, description):
+def add_case(name, method, url, headers, body, expected_status, expected_body, description,data_source_id=None,data_mapping=''):
     conn = get_db_connection()
     c = conn.cursor()
     c.execute('''
-        INSERT INTO test_cases (name, method, url, headers, body, expected_status, expected_body, description)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    ''', (name, method, url, headers, body, expected_status, expected_body, description))
+        INSERT INTO test_cases (name, method, url, headers, body, expected_status, expected_body, description,data_source_id,data_mapping)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?)
+    ''', (name, method, url, headers, body, expected_status, expected_body, description,data_source_id,data_mapping))
     conn.commit()
     case_id = c.lastrowid
     conn.close()
@@ -88,13 +88,13 @@ def get_case(case_id):
     conn.close()
     return case
 
-def update_case(case_id, name, method, url, headers, body, expected_status, expected_body, description):
+def update_case(case_id, name, method, url, headers, body, expected_status, expected_body, description,data_source_id=None,data_mapping=''):
     conn = get_db_connection()
     conn.execute('''
         UPDATE test_cases
-        SET name=?, method=?, url=?, headers=?, body=?, expected_status=?, expected_body=?, description=?
+        SET name=?, method=?, url=?, headers=?, body=?, expected_status=?, expected_body=?, description=?,data_source_id=?,data_mapping=?,
         WHERE id=?
-    ''', (name, method, url, headers, body, expected_status, expected_body, description, case_id))
+    ''', (name, method, url, headers, body, expected_status, expected_body, description, case_id,data_source_id,data_mapping))
     conn.commit()
     conn.close()
 

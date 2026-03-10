@@ -1,7 +1,20 @@
 import json
 import os
 import time
+
+import pandas as pd
 from deepdiff import DeepDiff
+
+def load_data_from_source(file_path):
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"文件不存在: {file_path}")
+    if file_path.endswith('.csv'):
+        df = pd.read_csv(file_path, encoding='utf-8')
+    elif file_path.endswith(('.xlsx','xls')):
+        df = pd.read_excel(file_path, encoding='utf-8')
+    else:
+        raise ValueError("不支持数据文件类型，请使用csv或excel")
+    return df.to_dict('records')
 
 def safe_json_loads(s):
     """安全地将字符串解析为 JSON，失败返回 None"""
@@ -39,8 +52,23 @@ def generate_html_report(run_data, cases_results, run_id):
     passed = sum(1 for r in cases_results if r['status'] == 'PASS')
     failed = total - passed
     pass_rate = (passed / total * 100) if total else 0
-
+    html = ""
+    for r in cases_results:
+        if 'sub_results' in r:
+            # 主行
+            html += f"<tr class='data-driven' onclick='toggleSubRows(this)'>"
+            html += f"<td>{r['case_name']}</td><td>{r['status']}</td>..."
+            html += "</tr>"
+            # 子行（初始隐藏）
+            for sub in r['sub_results']:
+                html += f"<tr class='sub-result' style='display:none'>"
+                html += f"<td>↳ {sub.get('data_row', '')}</td><td>{sub['status']}</td>..."
+                html += "</tr>"
+        else:
+            # 普通行
+            html += f"<tr>..."
     html = f"""<!DOCTYPE html>
+    
 <html>
 <head>
     <meta charset="UTF-8">
@@ -98,6 +126,18 @@ def generate_html_report(run_data, cases_results, run_id):
                 el.style.display = 'none';
             }
         }
+        # 添加
+        function toggleSubRows(mainRow) {
+    var nextRows = [];
+    var sibling = mainRow.nextElementSibling;
+    while (sibling && sibling.classList.contains('sub-result')) {
+        nextRows.push(sibling);
+        sibling = sibling.nextElementSibling;
+    }
+    for (var row of nextRows) {
+        row.style.display = row.style.display === 'none' ? 'table-row' : 'none';
+    }
+}
     </script>
 </body>
 </html>
