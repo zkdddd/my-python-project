@@ -17,6 +17,7 @@ virtualenv/
 *.conf
 config.local.py
 secrets.py
+opencode.json
 
 # IDE配置
 .vscode/

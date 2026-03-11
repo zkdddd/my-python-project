@@ -4,91 +4,219 @@
     <meta charset="UTF-8">
     <title>{% if case %}编辑用例{% else %}新建用例{% endif %}</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
-            font-family: Arial, sans-serif;
-            margin: 30px;
-            background-color: #f4f4f4;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: white;
+            font-size: 28px;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         form {
-            max-width: 800px;
-            margin: 0 auto;
             background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
         }
-        label { display: block; margin-top: 15px; font-weight: bold; }
-        input[type=text], input[type=url], textarea, select { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; }
-        textarea { font-family: monospace; }
+        fieldset {
+            border: none;
+            padding: 25px 30px;
+            border-bottom: 1px solid #eee;
+        }
+        fieldset:last-child {
+            border-bottom: none;
+        }
+        legend {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            padding: 0 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+            font-size: 14px;
+        }
+        input[type=text], 
+        input[type=url], 
+        input[type=number],
+        textarea, 
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        textarea {
+            font-family: 'Fira Code', 'Consolas', monospace;
+            resize: vertical;
+            min-height: 80px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .button-group {
+            display: flex;
+            gap: 15px;
+            padding: 25px 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
         button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: #2094f3;
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1em;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            flex: 1;
         }
-        .back {
-            margin-top: 20px;
-            display: inline-block;
-            text-decoration: none;
-            color: #2094f3;
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .back-btn {
+            background: #6c757d !important;
+        }
+        .back-btn:hover {
+            background: #5a6268 !important;
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4) !important;
+        }
+        .required::after {
+            content: " *";
+            color: #e74c3c;
+        }
+        .field-description {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            fieldset {
+                padding: 20px;
+            }
+            .button-group {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
-    <h1 style="text-align: center; margin-bottom: 20px;">{% if case %}编辑用例 #{{ case.id }}{% else %}新建用例{% endif %}</h1>
-    <form method="post">
+    <div class="container">
+        <div class="header">
+            <h1>{% if case %}编辑用例 #{{ case.id }}{% else %}新建用例{% endif %}</h1>
+        </div>
+        <form method="post">
         <fieldset>
             <legend>基本信息</legend>
-            <label>用例名称</label>
-            <input type="text" name="name" value="{{ case.name if case else '' }}" required>
+            <div class="form-group">
+                <label class="required">用例名称</label>
+                <input type="text" name="name" value="{{ case.name if case else '' }}" required placeholder="请输入用例名称">
+            </div>
         </fieldset>
 
         <fieldset>
             <legend>请求配置</legend>
-            <label>请求方法</label>
-            <select name="method">
-                <option value="GET" {% if case and case.method == 'GET' %}selected{% endif %}>GET</option>
-                <option value="POST" {% if case and case.method == 'POST' %}selected{% endif %}>POST</option>
-                <option value="PUT" {% if case and case.method == 'PUT' %}selected{% endif %}>PUT</option>
-                <option value="DELETE" {% if case and case.method == 'DELETE' %}selected{% endif %}>DELETE</option>
-            </select>
-            <label>URL</label>
-            <input type="url" name="url" value="{{ case.url if case else '' }}" required>
-            <label>请求头 (JSON格式，可选)</label>
-            <textarea name="headers" rows="3">{{ case.headers if case else '' }}</textarea>
-            <label>请求体 (JSON格式，可选)</label>
-            <textarea name="body" rows="5">{{ case.body if case else '' }}</textarea>
+            <div class="form-group">
+                <label class="required">请求方法</label>
+                <select name="method">
+                    <option value="GET" {% if case and case.method == 'GET' %}selected{% endif %}>GET</option>
+                    <option value="POST" {% if case and case.method == 'POST' %}selected{% endif %}>POST</option>
+                    <option value="PUT" {% if case and case.method == 'PUT' %}selected{% endif %}>PUT</option>
+                    <option value="DELETE" {% if case and case.method == 'DELETE' %}selected{% endif %}>DELETE</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="required">URL</label>
+                <input type="url" name="url" value="{{ case.url if case else '' }}" required placeholder="https://example.com/api/endpoint">
+            </div>
+            <div class="form-group">
+                <label>请求头</label>
+                <textarea name="headers" rows="3" placeholder='{"Authorization": "Bearer token"}'>{{ case.headers if case else '' }}</textarea>
+                <p class="field-description">JSON格式，可选</p>
+            </div>
+            <div class="form-group">
+                <label>请求体</label>
+                <textarea name="body" rows="5" placeholder='{"key": "value"}'>{{ case.body if case else '' }}</textarea>
+                <p class="field-description">JSON格式，可选</p>
+            </div>
         </fieldset>
 
         <fieldset>
             <legend>期望结果</legend>
-            <label>期望状态码</label>
-            <input type="number" name="expected_status" value="{{ case.expected_status if case else 200 }}" required>
-            <label>期望响应体 (JSON格式，用于比对，可选)</label>
-            <textarea name="expected_body" rows="5">{{ case.expected_body if case else '' }}</textarea>
-            <select name="data_source_id">
-                <option value="">无数据源</option>
-                {% for ds in data_source %}
-                <option value="{{ ds.id }}" {% if case and case.data_source_id == ds.id %}selected{% endif %}>{{ ds.name }}</option>
-                {% endfor %}
-                <label>字段映射（JSON格式，例如 {"username":"用户名","password":"密码"}）</label>
-                <textarea name="data_mapping" rows="3">{{ case.data_mapping if case else '' }}</textarea>
-            </select>
-
+            <div class="form-group">
+                <label class="required">期望状态码</label>
+                <input type="number" name="expected_status" value="{{ case.expected_status if case else 200 }}" required placeholder="200">
+            </div>
+            <div class="form-group">
+                <label>期望响应体</label>
+                <textarea name="expected_body" rows="5" placeholder='{"status": "success", "data": {...}}'>{{ case.expected_body if case else '' }}</textarea>
+                <p class="field-description">JSON格式，用于比对，可选</p>
+            </div>
+            <div class="form-group">
+                <label>数据源</label>
+                <select name="data_source_id">
+                    <option value="">无数据源</option>
+                    {% for ds in data_sources %}
+                    <option value="{{ ds.id }}" {% if case and case.data_source_id == ds.id %}selected{% endif %}>{{ ds.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>字段映射</label>
+                <textarea name="data_mapping" rows="3" placeholder='{"username":"用户名","password":"密码"}'>{{ case.data_mapping if case else '' }}</textarea>
+                <p class="field-description">JSON格式，例如 {"username":"用户名","password":"密码"}</p>
+            </div>
         </fieldset>
 
         <fieldset>
             <legend>其他信息</legend>
-            <label>描述</label>
-            <textarea name="description" rows="2">{{ case.description if case else '' }}</textarea>
+            <div class="form-group">
+                <label>描述</label>
+                <textarea name="description" rows="2" placeholder="用例描述信息...">{{ case.description if case else '' }}</textarea>
+            </div>
         </fieldset>
 
-        <button type="submit">保存</button>
-        <a href="/" class="back">返回</a>
+        <div class="button-group">
+            <button type="submit">保存用例</button>
+            <button type="button" class="back-btn" onclick="window.location.href='/'">返回列表</button>
+        </div>
     </form>
-</body>
+</div></body>
 </html>
