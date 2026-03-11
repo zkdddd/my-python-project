@@ -3,8 +3,6 @@ from flask import Flask, request, render_template, jsonify, url_for, redirect
 import json
 import time
 from datetime import datetime
-
-from multipart import file_path
 from werkzeug.utils import secure_filename
 from models import init_db, add_case, get_all_cases, get_case, update_case, delete_case, add_data_source, \
     get_all_data_sources
