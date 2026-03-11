@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+    
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>测试报告 #11</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; }
+        .summary { background: #f0f0f0; padding: 20px; border-radius: 8px; }
+        .pass { color: green; }
+        .fail { color: red; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #4CAF50; color: white; }
+        tr:hover { background: #f5f5f5; }
+        .detail { background: #eee; padding: 10px; display: none; }
+    </style>
+</head>
+<body>
+    <h1>接口自动化测试报告 #11</h1>
+    <div class="summary">
+        <p>运行时间: 2026-03-11 14:34:26 至 2026-03-11 14:34:28</p>
+        <p>总计: 4 | 通过: <span class="pass">0</span> | 失败: <span class="fail">4</span> | 通过率: 0.0%</p>
+    </div>
+    <table>
+        <thead>
+            <tr><th>用例名称</th><th>状态</th><th>响应码</th><th>耗时(秒)</th><th>详情</th></tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>用户登陆test</td>
+                <td class="fail">FAIL</td>
+                <td>403</td>
+                <td>0.657</td>
+                <td><button onclick="toggle('detail_2')">查看</button></td>
+            </tr>
+            <tr id="detail_2" class="detail">
+                <td colspan="5">
+                    <pre>错误信息: 状态码期望 200 实际 403</pre>
+                    <pre>响应体: <!DOCTYPE html><html lang="en-US"><head><title>Just a moment...</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=Edge"><meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1"><style>*{box-sizing:border-box;margin:0;padding:0}html{line-height:1.15;-webkit-text-size-adjust:100%;color:#313131;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"}body{display:flex;flex-direction:column;height:100vh;min-height:100vh}.main-content{margin:8rem auto;padding-left:1.5rem;max-width:60rem}@media (width <= 720px){.main-content{margin-top:4rem}}#challenge-error-text{background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0ibm9uZSI+PHBhdGggZmlsbD0iI0IyMEYwMyIgZD0iTTE2IDNhMTMgMTMgMCAxIDAgMTMgMTNBMTMuMDE1IDEzLjAxNSAwIDAgMCAxNiAzbTAgMjRhMTEgMTEgMCAxIDEgMTEtMTEgMTEuMDEgMTEuMDEgMCAwIDEtMTEgMTEiLz48cGF0aCBmaWxsPSIjQjIwRjAzIiBkPSJNMTcuMDM4IDE4LjYxNUgxNC44N0wxNC41NjMgOS41aDIuNzgzem0tMS4wODQgMS40MjdxLjY2IDAgMS4wNTcuMzg4LjQwNy4zODkuNDA3Ljk5NCAwIC41OTYtLjQwNy45ODQtLjM5Ny4zOS0xLjA1Ny4zODktLjY1IDAtMS4wNTYtLjM4OS0uMzk4LS4zODktLjM5OC0uOTg0IDAtLjU5Ny4zOTgtLjk4NS40MDYtLjM5NyAxLjA1Ni0uMzk3Ii8+PC9zdmc+");background-repeat:no-repeat;background-size:contain;padding-left:34px}</style><meta http-equiv="refresh" content="360"></head><body><div class="main-wrapper" role="main"><div class="main-content"><noscript><div class="h2"><span id="challenge-error-text">Enable JavaScript and cookies to continue</span></div></noscript></div></div><script>(function(){window._cf_chl_opt = {cvId: '3',cZone: 'reqres.in',cType: 'managed',cRay: '9da888920aa55b71',cH: 'q2h9j6NaRcjQCSRJhw..tv9yqR3nKdruMjYL42ZHUlM-1773210867-1.2.1.1-gAUvytgfVKfRl4YD3VD2Uf0b9e.gOzyfYTT37Xi5_KEpvyFhF5jIfa2k...PoEJf',cUPMDTk:"/api/login?__cf_chl_tk=oiy6ECxOP8Y.ZoKGzFtO8kgZ6.NGMZehIDfjqxCHj9Q-1773210867-1.0.1.1-YGfB0ZrYcLMRIvL9mqHE6ZM3vkhLYey.vg9Dw8ziQsg",cFPWv: 'g',cITimeS: '1773210867',cTplC:0,cTplV:5,cTplB: '0',fa:"/api/login?__cf_chl_f_tk=oiy6ECxOP8Y.ZoKGzFtO8kgZ6.NGMZehIDfjqxCHj9Q-1773210867-1.0.1.1-YGfB0ZrYcLMRIvL9mqHE6ZM3vkhLYey.vg9Dw8ziQsg",md: '3FVJLCtAHCaWeeVvqPX1TckZIK7WCYtNNo3dkUvIFeI-1773210867-1.2.1.1-RqRgxYy2NvM5hhuTWImafy6Y3WfZ_uTwumuZU8abt.kYTtKs20aWtin6VzmdWOQdteyKv4CU1bHD0VbleNH1NlaWc4uW515IYAA2BoklEJMm2WDdj4bKwWQPYzHxlwKtfW2esVFc9Ta6aKliV6HfCyGCNLWivkOQRvrGygkAFE_A6UzCOfa3VQ.6LMLxT6fV4g6GzHuQyeM7BDP4xav2oVkWT8Spapgva1msK7kr5K3pjq4U9bhftn98NsIBWfHMIK6OVeSGLlwKMUIfIY.8VlapMm61_pR0pHGDj9Wi46os4cIrUlU58QWMa1TKWW25sQPTm8yToJ3tdrpxra0TFWMol5NQOJ_6aVT_qFwk4js6Aj.jgMDgGZfdvpQYjuyZ8uV.mxpaR2UrPqwpkVzKmsC8Tg.j7ksWQii.oZoFCtSDn0DIa8WGsilRMkX57LQO17gXg7G6QvKhKwXWrswLDmtHf9gKY0Gg7Hdx4L9VsDr1G1ldPcKPChSWzVl6wwD6qCysa8g_KnnYCeMQbu21_Ll0hgNXsaah2nO_hADEItpXzC6XzRN4T.H8iDsThkXex3mkC0RFKtUROuzYGyV3t0i2h2yOkvOMJ_zl3tsadAZ34deK461DVlXLcI6fNQMiycqTzvD5NbSV42tnRtHA1UyrpGIyr.IBLsP75wZQw4.za8AnN0Od0NrvinggDs7SWSaAY1ay2l3Jyk6WPx_9dr96.rgBSBQZGdt21zwr7HF6.QvwTobF6FIKX4tGjocUgrrMvdg7ZCfIGrbr5pjn67ZLH1sZdiaLqpmCuNqYJuesJImzvOnCE9aKtZ2bmh0jAdfe1Z_5ZkkkWbBzAzIXJjeUs_kMPmQdlyY22havyjoR6fpNBKoNxRGsT3hrJi81',mdrd: '5Yji0D5TL7MboDpvVMkViJoYbbutJumgGgv3m7GVnVc-1773210867-1.2.1.1-E_6d5tKdYwiG39cuwaE2e2RcvszOsjZdVoHikqAPliNRDlitPQqxdFTgSJ.wYtFMFd.M_8ijmOfepQEdvRZO5Y7eSFdLvrjIUi9DTkzNzweFOVA0Vx2QWDgQ3EE8lmYb.U3IIF.evEA1SXv0kFWm3CaW3LQxZlA4wnUsi8DAMyAmxvnqHkN8DiZr49o1sLRzC0vrothGLj9H5MtGwNQTf7YaxoGzQV0cTU2cBqi6Za_d228Z4WxWjpX.dPkRnDu0zF_w7EjfkMb_F.Q8l703bTMG5k0nSmxmRtKlRzqusyMWU162s5BBPks5.nmmSkYaOIDTJl2o0qoq4FpRjSvdCtiWltXw1llVbblodrHSx_VdWqxHG4163HAbfEnbkMP5gsW3oPqMzrgvYpmzBpfPpp9auxsjI1N.XsRujt5jCX8',};var a = document.createElement('script');a.src = '/cdn-cgi/challenge-platform/h/g/orchestrate/chl_page/v1?ray=9da888920aa55b71';window._cf_chl_opt.cOgUHash = location.hash === '' && location.href.indexOf('#') !== -1 ? '#' : location.hash;window._cf_chl_opt.cOgUQuery = location.search === '' && location.href.slice(0, location.href.length - window._cf_chl_opt.cOgUHash.length).indexOf('?') !== -1 ? '?' : location.search;if (window.history && window.history.replaceState) {var ogU = location.pathname + window._cf_chl_opt.cOgUQuery + window._cf_chl_opt.cOgUHash;history.replaceState(null, null,"/api/login?__cf_chl_rt_tk=oiy6ECxOP8Y.ZoKGzFtO8kgZ6.NGMZehIDfjqxCHj9Q-1773210867-1.0.1.1-YGfB0ZrYcLMRIvL9mqHE6ZM3vkhLYey.vg9Dw8ziQsg"+ window._cf_chl_opt.cOgUHash);a.onload = function() {history.replaceState(null, null, ogU);}}document.getElementsByTagName('head')[0].appendChild(a);}());</script></body></html></pre>
+                </td>
+            </tr>
+
+            <tr>
+                <td>test</td>
+                <td class="fail">FAIL</td>
+                <td>200</td>
+                <td>0.738</td>
+                <td><button onclick="toggle('detail_1')">查看</button></td>
+            </tr>
+            <tr id="detail_1" class="detail">
+                <td colspan="5">
+                    <pre>错误信息: 响应体差异: 实际/期望值为空</pre>
+                    <pre>响应体: {
+  "userId": 1,
+  "id": 1,
+  "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+  "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+}</pre>
+                </td>
+            </tr>
+
+            <tr>
+                <td>test</td>
+                <td class="fail">FAIL</td>
+                <td>200</td>
+                <td>0.568</td>
+                <td><button onclick="toggle('detail_1')">查看</button></td>
+            </tr>
+            <tr id="detail_1" class="detail">
+                <td colspan="5">
+                    <pre>错误信息: 响应体差异: 实际/期望值为空</pre>
+                    <pre>响应体: {
+  "userId": 1,
+  "id": 1,
+  "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+  "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+}</pre>
+                </td>
+            </tr>
+
+            <tr>
+                <td>test</td>
+                <td class="fail">FAIL</td>
+                <td>200</td>
+                <td>0.568</td>
+                <td><button onclick="toggle('detail_1')">查看</button></td>
+            </tr>
+            <tr id="detail_1" class="detail">
+                <td colspan="5">
+                    <pre>错误信息: 响应体差异: 实际/期望值为空</pre>
+                    <pre>响应体: {
+  "userId": 1,
+  "id": 1,
+  "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+  "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+}</pre>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <script>
+        function toggle(id) {
+            var el = document.getElementById(id);
+            if (el.style.display === 'none' || el.style.display === '') {
+                el.style.display = 'table-row';
+            } else {
+                el.style.display = 'none';
+            }
+        }
+        # 添加
+        function toggleSubRows(mainRow) {
+    var nextRows = [];
+    var sibling = mainRow.nextElementSibling;
+    while (sibling && sibling.classList.contains('sub-result')) {
+        nextRows.push(sibling);
+        sibling = sibling.nextElementSibling;
+    }
+    for (var row of nextRows) {
+        row.style.display = row.style.display === 'none' ? 'table-row' : 'none';
+    }
+}
+    </script>
+</body>
+</html>

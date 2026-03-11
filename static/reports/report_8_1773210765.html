@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+    
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>测试报告 #8</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; }
+        .summary { background: #f0f0f0; padding: 20px; border-radius: 8px; }
+        .pass { color: green; }
+        .fail { color: red; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #4CAF50; color: white; }
+        tr:hover { background: #f5f5f5; }
+        .detail { background: #eee; padding: 10px; display: none; }
+    </style>
+</head>
+<body>
+    <h1>接口自动化测试报告 #8</h1>
+    <div class="summary">
+        <p>运行时间: 2026-03-11 14:32:43 至 2026-03-11 14:32:44</p>
+        <p>总计: 3 | 通过: <span class="pass">0</span> | 失败: <span class="fail">3</span> | 通过率: 0.0%</p>
+    </div>
+    <table>
+        <thead>
+            <tr><th>用例名称</th><th>状态</th><th>响应码</th><th>耗时(秒)</th><th>详情</th></tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>用户登陆test</td>
+                <td class="fail">FAIL</td>
+                <td>403</td>
+                <td>0.445</td>
+                <td><button onclick="toggle('detail_2')">查看</button></td>
+            </tr>
+            <tr id="detail_2" class="detail">
+                <td colspan="5">
+                    <pre>错误信息: 状态码期望 200 实际 403</pre>
+                    <pre>响应体: <!DOCTYPE html><html lang="en-US"><head><title>Just a moment...</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=Edge"><meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1"><style>*{box-sizing:border-box;margin:0;padding:0}html{line-height:1.15;-webkit-text-size-adjust:100%;color:#313131;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"}body{display:flex;flex-direction:column;height:100vh;min-height:100vh}.main-content{margin:8rem auto;padding-left:1.5rem;max-width:60rem}@media (width <= 720px){.main-content{margin-top:4rem}}#challenge-error-text{background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0ibm9uZSI+PHBhdGggZmlsbD0iI0IyMEYwMyIgZD0iTTE2IDNhMTMgMTMgMCAxIDAgMTMgMTNBMTMuMDE1IDEzLjAxNSAwIDAgMCAxNiAzbTAgMjRhMTEgMTEgMCAxIDEgMTEtMTEgMTEuMDEgMTEuMDEgMCAwIDEtMTEgMTEiLz48cGF0aCBmaWxsPSIjQjIwRjAzIiBkPSJNMTcuMDM4IDE4LjYxNUgxNC44N0wxNC41NjMgOS41aDIuNzgzem0tMS4wODQgMS40MjdxLjY2IDAgMS4wNTcuMzg4LjQwNy4zODkuNDA3Ljk5NCAwIC41OTYtLjQwNy45ODQtLjM5Ny4zOS0xLjA1Ny4zODktLjY1IDAtMS4wNTYtLjM4OS0uMzk4LS4zODktLjM5OC0uOTg0IDAtLjU5Ny4zOTgtLjk4NS40MDYtLjM5NyAxLjA1Ni0uMzk3Ii8+PC9zdmc+");background-repeat:no-repeat;background-size:contain;padding-left:34px}</style><meta http-equiv="refresh" content="360"></head><body><div class="main-wrapper" role="main"><div class="main-content"><noscript><div class="h2"><span id="challenge-error-text">Enable JavaScript and cookies to continue</span></div></noscript></div></div><script>(function(){window._cf_chl_opt = {cvId: '3',cZone: 'reqres.in',cType: 'managed',cRay: '9da8860d5eb2ddc3',cH: 'rWyywXdjNQJJiRjAuC3OvuEhIh0ikIY8C.zQtd1O1zw-1773210764-1.2.1.1-d2wOmtSK3gieEv82lpJk_Zxltw4x04fx2sFDhLadcEC73bVvp9KFy50ftKFeCwde',cUPMDTk:"/api/login?__cf_chl_tk=mxP8xD9V67xRs4FoIOZ0_tIdIirtYm.KAk3MgyGjcY4-1773210764-1.0.1.1-uR0v3FPRiP7Rs1JQeR7kpu2PpJqI_KR7bERfWHTh2.o",cFPWv: 'g',cITimeS: '1773210764',cTplC:0,cTplV:5,cTplB: '0',fa:"/api/login?__cf_chl_f_tk=mxP8xD9V67xRs4FoIOZ0_tIdIirtYm.KAk3MgyGjcY4-1773210764-1.0.1.1-uR0v3FPRiP7Rs1JQeR7kpu2PpJqI_KR7bERfWHTh2.o",md: 'Fb41.kM_Y7VFV7OQ2QndH87JSZulzsZJeEl0FYS945w-1773210764-1.2.1.1-L9MeLFUYmIJmqttG1iHUaUP.v2cWbjZ9BOEHmicj1ESTsmDQO5.Rg189LqSr0799wW5TXonwTlYhX7JD4V.TZy5zTotzJSdmp95moHfXjCN4Q2oZh5WtrIuIrlodJrA9nJ_dqoZT4LohIJIh0hl8x1yc2fjy227kdQxm6SMbTyA5CLX8vqAd3GCULGvnOrM_BLhEOy0p3DTlVCxQoOqdpXflN1KLMeVikVRxnj90idU8hKyUOkB30uRsdt9.tGbnj6dHKMTwEN7V8dwExW4GNbK14pJSWv1xrHr.cMpLVIWt0eUnEG9BeWiD1IvUGnk6DUzNCYjKVKl7JS2CF7h5DpcZ8YvIKMlnkvMYZT7o3roS4_GS7EFQxlHm8G1QbJBZeFXt0hnNourJret2E3ahZzVAS5pZGNvdnYI..KPRRk2v4S5TdVmEpg3.fLNbJm.w8x4LMlMe5Y7bihKP68DeIX3V3rMz077HJ31dsiHqA1fqArugBQndHBtOTUoriyKVrWIjac_coeJTgXzqsS1920tONR64pR2IpSuKnm2djETXiLLbsBx8x7ue8UvF.0kVkqXA6ladtykINfG8euMOMPUw3L.YwoO7.40FIZU2NpOXoft.Y9BkqHviK9HDIl_ce4BIZAgvv2MLQ5MpRZwYHTpnU9bfN4muve3snU2Is1Ou38IX4WwHBoyr7rXdHWzxsc1D5hnPnoeicS4VoLlONT4zldxELj47_YozF37sgxC._XdGj2xJBxI0UL.pLOdVP2Zs1TSm.p366eRX3SX7G0IpI4e_3AV9sr5HEc_M5zeIaEehfU8unnE_b_JgzWLRi57m7cVGlNMmep49QkBrBz.R3MzQPVLsE8UaTgKybO.hiB44u9.tioseBBZtvsrE',mdrd: 'FcxNrGFXH2TSUt7n48zT7965_fwItmmOb_.5GSbH8UY-1773210764-1.2.1.1-p3MTrgNTP9YTfjGYD5q59O1cCFnkycdv9sPdK4c1YXl0TOmxMsUd0TRT1aLVhec2SvGgv9wmiy_lHCrq7z9POgu1A1bwPlv1Z3TCgWOb8Sl9BmoOlEbrvL9Z8qrfMAcR.NTtThRjX8StD5kncqJjmNCirw75T.0fgmaGgOX16E62SfjodzTCMpF9N1xfJr7r9qIcf80LAOmW2ZKrrGPaYMiOpQuk8j6ulbi9aVa2NOmYbWl4oWV8IlaZ3sfxvY8Ky.iNESDZoH3BZuwFCf3t3k46nJTvL8eeHcXgUY7_0Np4YyVvSK9r.nHnJpuN0XqxYRhOywK3AN0P6PtDNgsfG3YuubCFLyQNErn9JWl6RvlFsv3pGR9lLmTFMWZgSmYD4v9m60eAQ3h76Ib6_qkfpqhrVyZddT_GUlS_kTMPE04',};var a = document.createElement('script');a.src = '/cdn-cgi/challenge-platform/h/g/orchestrate/chl_page/v1?ray=9da8860d5eb2ddc3';window._cf_chl_opt.cOgUHash = location.hash === '' && location.href.indexOf('#') !== -1 ? '#' : location.hash;window._cf_chl_opt.cOgUQuery = location.search === '' && location.href.slice(0, location.href.length - window._cf_chl_opt.cOgUHash.length).indexOf('?') !== -1 ? '?' : location.search;if (window.history && window.history.replaceState) {var ogU = location.pathname + window._cf_chl_opt.cOgUQuery + window._cf_chl_opt.cOgUHash;history.replaceState(null, null,"/api/login?__cf_chl_rt_tk=mxP8xD9V67xRs4FoIOZ0_tIdIirtYm.KAk3MgyGjcY4-1773210764-1.0.1.1-uR0v3FPRiP7Rs1JQeR7kpu2PpJqI_KR7bERfWHTh2.o"+ window._cf_chl_opt.cOgUHash);a.onload = function() {history.replaceState(null, null, ogU);}}document.getElementsByTagName('head')[0].appendChild(a);}());</script></body></html></pre>
+                </td>
+            </tr>
+
+            <tr>
+                <td>用户登陆test</td>
+                <td class="fail">FAIL</td>
+                <td>403</td>
+                <td>0.418</td>
+                <td><button onclick="toggle('detail_2')">查看</button></td>
+            </tr>
+            <tr id="detail_2" class="detail">
+                <td colspan="5">
+                    <pre>错误信息: 状态码期望 200 实际 403</pre>
+                    <pre>响应体: <!DOCTYPE html><html lang="en-US"><head><title>Just a moment...</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=Edge"><meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1"><style>*{box-sizing:border-box;margin:0;padding:0}html{line-height:1.15;-webkit-text-size-adjust:100%;color:#313131;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"}body{display:flex;flex-direction:column;height:100vh;min-height:100vh}.main-content{margin:8rem auto;padding-left:1.5rem;max-width:60rem}@media (width <= 720px){.main-content{margin-top:4rem}}#challenge-error-text{background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0ibm9uZSI+PHBhdGggZmlsbD0iI0IyMEYwMyIgZD0iTTE2IDNhMTMgMTMgMCAxIDAgMTMgMTNBMTMuMDE1IDEzLjAxNSAwIDAgMCAxNiAzbTAgMjRhMTEgMTEgMCAxIDEgMTEtMTEgMTEuMDEgMTEuMDEgMCAwIDEtMTEgMTEiLz48cGF0aCBmaWxsPSIjQjIwRjAzIiBkPSJNMTcuMDM4IDE4LjYxNUgxNC44N0wxNC41NjMgOS41aDIuNzgzem0tMS4wODQgMS40MjdxLjY2IDAgMS4wNTcuMzg4LjQwNy4zODkuNDA3Ljk5NCAwIC41OTYtLjQwNy45ODQtLjM5Ny4zOS0xLjA1Ny4zODktLjY1IDAtMS4wNTYtLjM4OS0uMzk4LS4zODktLjM5OC0uOTg0IDAtLjU5Ny4zOTgtLjk4NS40MDYtLjM5NyAxLjA1Ni0uMzk3Ii8+PC9zdmc+");background-repeat:no-repeat;background-size:contain;padding-left:34px}</style><meta http-equiv="refresh" content="360"></head><body><div class="main-wrapper" role="main"><div class="main-content"><noscript><div class="h2"><span id="challenge-error-text">Enable JavaScript and cookies to continue</span></div></noscript></div></div><script>(function(){window._cf_chl_opt = {cvId: '3',cZone: 'reqres.in',cType: 'managed',cRay: '9da8860fe88fd13f',cH: 'nS5gdme_Hfe_etkfswZ0VMgfw4RvcAeHzrMlSvn9hlY-1773210764-1.2.1.1-X71kxD13wlx.1zlMAi3XMVj09J3BKv94Pr1TihP93gQO52ryLpl.6oB50_TgGWL4',cUPMDTk:"/api/login?__cf_chl_tk=RjQtRC_tT9DtpYXU.6KtLFrCZdTDbbTwKWmeiq_P5Qs-1773210764-1.0.1.1-0NnMeW2S1iXxMkLChNYxuXI5FZ_w5CRJN95evVF1ylU",cFPWv: 'g',cITimeS: '1773210764',cTplC:0,cTplV:5,cTplB: '0',fa:"/api/login?__cf_chl_f_tk=RjQtRC_tT9DtpYXU.6KtLFrCZdTDbbTwKWmeiq_P5Qs-1773210764-1.0.1.1-0NnMeW2S1iXxMkLChNYxuXI5FZ_w5CRJN95evVF1ylU",md: 'a7PzfmxaK41xeyy6eb.ukLzPX1LesB.PBOK.UgYEhlg-1773210764-1.2.1.1-lxh48ROIc9NGah82qJmQTgAgD4bryIMjhyPFF_DehURTtG6TehqxUZA__9_uASfGgDzjp.nkxuvXRMQywg.Z14aJjzYpnON6Qxm4dkFd1hR3H7xCKBhFCO8qamW4rAIxNXkwaHnML2jN.Xd55lly5WM87cfgvLzxyNAiUXK5UxaWoIIJfOoAJVdrvkRiZ9ZI1jEBii9MwDMLZfb6Zir0NhiBar883EBEP7wLeLWOvakDltnHbAkMIcNgdZ83ymhD87f2IwjkPcjYXNztgO1aqaHvZdADw72lwzxWHeqHKBGqbSEQkcZ4uB7ID.1N6_5kuxMiAfv8DgcCjGaXbdjGbiNDDTwADKI4a_Lw78q3Bo6EONIPk806WZfoL9kAF9c28KKSQgLUDmEW.cywr4RQ30ZN1OIW2JsbOWoaB.CEvrNMtQpGrT5wQhDROAyx5uKHet2PsUzNvN0A2V5WNy4w6OP_1McIxwz.soYSUXfq6tAvnpzRabzssHRhuTjl.HfJnadQzbtgiwdVqw7XEnJxCS79zj6hVq6C6CKiFl1umRH2UUoEDTlhpCRD_7TDvm.zVen4NAaUlq03m2j89GicPeL79yvVmTJ6Rv_9DLDjAj4LGcpkEjxWz2AZdoF1bssZqp13Ra9ohbpyjRKcYKXubQ4NkE.D8yW8RrmERWIxkZqYylbzEJbyWo35Mq_Y5nkUJG_0nUzDN1JwUlysb43wEIppTa7YetplMWS1CnGbFLHKw0HG0VJrtPvkSAD21fjJhwpGzQktrfJJh9Z70pdvJIcbsMFakQ21x7VOi867eJUqxl77LPeemA5j2t772WxeTKHAuy6iOQxuLDCiIRKNqKR9t8kTB7fPb7CmWMe3sfrzzamoo0vAlx1whZbdeyvv',mdrd: 'xGcJh3rWAajRnS5xSKNvJyKkmOPgYTX8TQzLlou27e0-1773210764-1.2.1.1-xo4C3X5qJT5QX0kWP5PSmB0r46jofoK_lpEHJM44Io1YiEEF.C168Npk0qwpUaTneoh9uFoqaq6dygWwmXNrj1y201sx1LZZErt6IVN5SOHuNWp8c0FdzUMXYLsVT2A0BTDFF0Fjr.0lDs1NLd7Ws_sp6dgpJuAN8g_WmDxg5CxWPnm1BMakMTVjK2XReStLddLS84k4aMlA4YUVa1kdhbL_ZEbeDAhI6HYtnPvbugMXEQxNSHaNZdqFJ0ePcSJKC83_oHCYpp37NcG0P.ZmHKctorcR7g2ZLSRoTNPmVbJCcRKldGMSFc3_pjrA9WEZntrLmU0Ul0lP7irN8XMqSGA_sl8ULbhswPfjzq3y8W9hT_JE9v5H4vAbhkPLfOIRGzP.bOb8hy2e1dbSkXGsVXzHDXciTlCVyU95FNh4pKw',};var a = document.createElement('script');a.src = '/cdn-cgi/challenge-platform/h/g/orchestrate/chl_page/v1?ray=9da8860fe88fd13f';window._cf_chl_opt.cOgUHash = location.hash === '' && location.href.indexOf('#') !== -1 ? '#' : location.hash;window._cf_chl_opt.cOgUQuery = location.search === '' && location.href.slice(0, location.href.length - window._cf_chl_opt.cOgUHash.length).indexOf('?') !== -1 ? '?' : location.search;if (window.history && window.history.replaceState) {var ogU = location.pathname + window._cf_chl_opt.cOgUQuery + window._cf_chl_opt.cOgUHash;history.replaceState(null, null,"/api/login?__cf_chl_rt_tk=RjQtRC_tT9DtpYXU.6KtLFrCZdTDbbTwKWmeiq_P5Qs-1773210764-1.0.1.1-0NnMeW2S1iXxMkLChNYxuXI5FZ_w5CRJN95evVF1ylU"+ window._cf_chl_opt.cOgUHash);a.onload = function() {history.replaceState(null, null, ogU);}}document.getElementsByTagName('head')[0].appendChild(a);}());</script></body></html></pre>
+                </td>
+            </tr>
+
+            <tr>
+                <td>用户登陆test</td>
+                <td class="fail">FAIL</td>
+                <td>403</td>
+                <td>0.418</td>
+                <td><button onclick="toggle('detail_2')">查看</button></td>
+            </tr>
+            <tr id="detail_2" class="detail">
+                <td colspan="5">
+                    <pre>错误信息: 状态码期望 200 实际 403</pre>
+                    <pre>响应体: <!DOCTYPE html><html lang="en-US"><head><title>Just a moment...</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=Edge"><meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1"><style>*{box-sizing:border-box;margin:0;padding:0}html{line-height:1.15;-webkit-text-size-adjust:100%;color:#313131;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"}body{display:flex;flex-direction:column;height:100vh;min-height:100vh}.main-content{margin:8rem auto;padding-left:1.5rem;max-width:60rem}@media (width <= 720px){.main-content{margin-top:4rem}}#challenge-error-text{background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0ibm9uZSI+PHBhdGggZmlsbD0iI0IyMEYwMyIgZD0iTTE2IDNhMTMgMTMgMCAxIDAgMTMgMTNBMTMuMDE1IDEzLjAxNSAwIDAgMCAxNiAzbTAgMjRhMTEgMTEgMCAxIDEgMTEtMTEgMTEuMDEgMTEuMDEgMCAwIDEtMTEgMTEiLz48cGF0aCBmaWxsPSIjQjIwRjAzIiBkPSJNMTcuMDM4IDE4LjYxNUgxNC44N0wxNC41NjMgOS41aDIuNzgzem0tMS4wODQgMS40MjdxLjY2IDAgMS4wNTcuMzg4LjQwNy4zODkuNDA3Ljk5NCAwIC41OTYtLjQwNy45ODQtLjM5Ny4zOS0xLjA1Ny4zODktLjY1IDAtMS4wNTYtLjM4OS0uMzk4LS4zODktLjM5OC0uOTg0IDAtLjU5Ny4zOTgtLjk4NS40MDYtLjM5NyAxLjA1Ni0uMzk3Ii8+PC9zdmc+");background-repeat:no-repeat;background-size:contain;padding-left:34px}</style><meta http-equiv="refresh" content="360"></head><body><div class="main-wrapper" role="main"><div class="main-content"><noscript><div class="h2"><span id="challenge-error-text">Enable JavaScript and cookies to continue</span></div></noscript></div></div><script>(function(){window._cf_chl_opt = {cvId: '3',cZone: 'reqres.in',cType: 'managed',cRay: '9da8860fe88fd13f',cH: 'nS5gdme_Hfe_etkfswZ0VMgfw4RvcAeHzrMlSvn9hlY-1773210764-1.2.1.1-X71kxD13wlx.1zlMAi3XMVj09J3BKv94Pr1TihP93gQO52ryLpl.6oB50_TgGWL4',cUPMDTk:"/api/login?__cf_chl_tk=RjQtRC_tT9DtpYXU.6KtLFrCZdTDbbTwKWmeiq_P5Qs-1773210764-1.0.1.1-0NnMeW2S1iXxMkLChNYxuXI5FZ_w5CRJN95evVF1ylU",cFPWv: 'g',cITimeS: '1773210764',cTplC:0,cTplV:5,cTplB: '0',fa:"/api/login?__cf_chl_f_tk=RjQtRC_tT9DtpYXU.6KtLFrCZdTDbbTwKWmeiq_P5Qs-1773210764-1.0.1.1-0NnMeW2S1iXxMkLChNYxuXI5FZ_w5CRJN95evVF1ylU",md: 'a7PzfmxaK41xeyy6eb.ukLzPX1LesB.PBOK.UgYEhlg-1773210764-1.2.1.1-lxh48ROIc9NGah82qJmQTgAgD4bryIMjhyPFF_DehURTtG6TehqxUZA__9_uASfGgDzjp.nkxuvXRMQywg.Z14aJjzYpnON6Qxm4dkFd1hR3H7xCKBhFCO8qamW4rAIxNXkwaHnML2jN.Xd55lly5WM87cfgvLzxyNAiUXK5UxaWoIIJfOoAJVdrvkRiZ9ZI1jEBii9MwDMLZfb6Zir0NhiBar883EBEP7wLeLWOvakDltnHbAkMIcNgdZ83ymhD87f2IwjkPcjYXNztgO1aqaHvZdADw72lwzxWHeqHKBGqbSEQkcZ4uB7ID.1N6_5kuxMiAfv8DgcCjGaXbdjGbiNDDTwADKI4a_Lw78q3Bo6EONIPk806WZfoL9kAF9c28KKSQgLUDmEW.cywr4RQ30ZN1OIW2JsbOWoaB.CEvrNMtQpGrT5wQhDROAyx5uKHet2PsUzNvN0A2V5WNy4w6OP_1McIxwz.soYSUXfq6tAvnpzRabzssHRhuTjl.HfJnadQzbtgiwdVqw7XEnJxCS79zj6hVq6C6CKiFl1umRH2UUoEDTlhpCRD_7TDvm.zVen4NAaUlq03m2j89GicPeL79yvVmTJ6Rv_9DLDjAj4LGcpkEjxWz2AZdoF1bssZqp13Ra9ohbpyjRKcYKXubQ4NkE.D8yW8RrmERWIxkZqYylbzEJbyWo35Mq_Y5nkUJG_0nUzDN1JwUlysb43wEIppTa7YetplMWS1CnGbFLHKw0HG0VJrtPvkSAD21fjJhwpGzQktrfJJh9Z70pdvJIcbsMFakQ21x7VOi867eJUqxl77LPeemA5j2t772WxeTKHAuy6iOQxuLDCiIRKNqKR9t8kTB7fPb7CmWMe3sfrzzamoo0vAlx1whZbdeyvv',mdrd: 'xGcJh3rWAajRnS5xSKNvJyKkmOPgYTX8TQzLlou27e0-1773210764-1.2.1.1-xo4C3X5qJT5QX0kWP5PSmB0r46jofoK_lpEHJM44Io1YiEEF.C168Npk0qwpUaTneoh9uFoqaq6dygWwmXNrj1y201sx1LZZErt6IVN5SOHuNWp8c0FdzUMXYLsVT2A0BTDFF0Fjr.0lDs1NLd7Ws_sp6dgpJuAN8g_WmDxg5CxWPnm1BMakMTVjK2XReStLddLS84k4aMlA4YUVa1kdhbL_ZEbeDAhI6HYtnPvbugMXEQxNSHaNZdqFJ0ePcSJKC83_oHCYpp37NcG0P.ZmHKctorcR7g2ZLSRoTNPmVbJCcRKldGMSFc3_pjrA9WEZntrLmU0Ul0lP7irN8XMqSGA_sl8ULbhswPfjzq3y8W9hT_JE9v5H4vAbhkPLfOIRGzP.bOb8hy2e1dbSkXGsVXzHDXciTlCVyU95FNh4pKw',};var a = document.createElement('script');a.src = '/cdn-cgi/challenge-platform/h/g/orchestrate/chl_page/v1?ray=9da8860fe88fd13f';window._cf_chl_opt.cOgUHash = location.hash === '' && location.href.indexOf('#') !== -1 ? '#' : location.hash;window._cf_chl_opt.cOgUQuery = location.search === '' && location.href.slice(0, location.href.length - window._cf_chl_opt.cOgUHash.length).indexOf('?') !== -1 ? '?' : location.search;if (window.history && window.history.replaceState) {var ogU = location.pathname + window._cf_chl_opt.cOgUQuery + window._cf_chl_opt.cOgUHash;history.replaceState(null, null,"/api/login?__cf_chl_rt_tk=RjQtRC_tT9DtpYXU.6KtLFrCZdTDbbTwKWmeiq_P5Qs-1773210764-1.0.1.1-0NnMeW2S1iXxMkLChNYxuXI5FZ_w5CRJN95evVF1ylU"+ window._cf_chl_opt.cOgUHash);a.onload = function() {history.replaceState(null, null, ogU);}}document.getElementsByTagName('head')[0].appendChild(a);}());</script></body></html></pre>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <script>
+        function toggle(id) {
+            var el = document.getElementById(id);
+            if (el.style.display === 'none' || el.style.display === '') {
+                el.style.display = 'table-row';
+            } else {
+                el.style.display = 'none';
+            }
+        }
+        # 添加
+        function toggleSubRows(mainRow) {
+    var nextRows = [];
+    var sibling = mainRow.nextElementSibling;
+    while (sibling && sibling.classList.contains('sub-result')) {
+        nextRows.push(sibling);
+        sibling = sibling.nextElementSibling;
+    }
+    for (var row of nextRows) {
+        row.style.display = row.style.display === 'none' ? 'table-row' : 'none';
+    }
+}
+    </script>
+</body>
+</html>
