@@ -113,14 +113,14 @@ def run_test():
                 })
                 continue
 
-                # 解析字段映射（JSON字符串 -> 字典）
+            # 解析字段映射（JSON字符串 -> 字典）
             mapping = json.loads(case['data_mapping'] or '{}')
             main_result = runner.run_data_driven(case, data_rows, mapping)
             results.append(main_result)
-    else:
-        # 普通执行
-        result = runner.run_single(case)
-        results.append(result)
+        else:
+            # 普通执行
+            result = runner.run_single(case)
+            results.append(result)
     # 保存运行记录到数据库
     run_ids = []
     for r in results:
@@ -172,7 +172,7 @@ def upload_data_source():
     if request.method == 'POST':
         name = request.form['name']
         file = request.files['file']
-        if file and (file.filename.endswith('.csv') or file.filename.endswith('.xlsx')):
+        if file and file.filename and (file.filename.endswith('.csv') or file.filename.endswith('.xlsx')):
             filename = secure_filename(file.filename)
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)

@@ -11,7 +11,7 @@ def load_data_from_source(file_path):
     if file_path.endswith('.csv'):
         df = pd.read_csv(file_path, encoding='utf-8')
     elif file_path.endswith(('.xlsx','xls')):
-        df = pd.read_excel(file_path, encoding='utf-8')
+        df = pd.read_excel(file_path)
     else:
         raise ValueError("不支持数据文件类型，请使用csv或excel")
     return df.to_dict('records')
@@ -97,7 +97,7 @@ def generate_html_report(run_data, cases_results, run_id):
         </thead>
         <tbody>
 """
-    for r in cases_results:
+    for idx, r in enumerate(cases_results):
         status_class = 'pass' if r['status']=='PASS' else 'fail'
         html += f"""
             <tr>
@@ -105,12 +105,12 @@ def generate_html_report(run_data, cases_results, run_id):
                 <td class="{status_class}">{r['status']}</td>
                 <td>{r['response_status']}</td>
                 <td>{r['duration']}</td>
-                <td><button onclick="toggle('detail_{r['case_id']}')">查看</button></td>
+                <td><button onclick="toggle('detail_{idx}')">查看</button></td>
             </tr>
-            <tr id="detail_{r['case_id']}" class="detail">
+            <tr id="detail_{idx}" class="detail">
                 <td colspan="5">
-                    <pre>错误信息: {r['error_message']}</pre>
-                    <pre>响应体: {r['response_body']}</pre>
+                    <pre>错误信息: {r.get('error_message', '')}</pre>
+                    <pre>响应体: {r.get('response_body', '')}</pre>
                 </td>
             </tr>
 """
@@ -126,18 +126,17 @@ def generate_html_report(run_data, cases_results, run_id):
                 el.style.display = 'none';
             }
         }
-        # 添加
         function toggleSubRows(mainRow) {
-    var nextRows = [];
-    var sibling = mainRow.nextElementSibling;
-    while (sibling && sibling.classList.contains('sub-result')) {
-        nextRows.push(sibling);
-        sibling = sibling.nextElementSibling;
-    }
-    for (var row of nextRows) {
-        row.style.display = row.style.display === 'none' ? 'table-row' : 'none';
-    }
-}
+            var nextRows = [];
+            var sibling = mainRow.nextElementSibling;
+            while (sibling && sibling.classList.contains('sub-result')) {
+                nextRows.push(sibling);
+                sibling = sibling.nextElementSibling;
+            }
+            for (var row of nextRows) {
+                row.style.display = row.style.display === 'none' ? 'table-row' : 'none';
+            }
+        }
     </script>
 </body>
 </html>
