@@ -213,6 +213,26 @@
             </div>
         </fieldset>
 
+        <fieldset>
+            <legend>断言配置</legend>
+            <div class="form-group">
+                <label>断言列表（JSON格式）</label>
+                <textarea name="assertions_json" rows="8" placeholder='[{"type": "status_code", "condition": "equals", "expected_value": 200}]'>{{ case.assertions_json if case else '' }}</textarea>
+                <p class="field-description">
+                    每个断言对象支持的字段：<br>
+                    type: 断言类型 (status_code, json_path, header, response_time, regex)<br>
+                    target: 对于json_path是JSONPath表达式（如 $.code），对于header是头部名称，其他类型可留空<br>
+                    condition: 比较条件 (equals, not_equals, contains, not_contains, gt, lt, ge, le, exists, not_exists, type)<br>
+                    expected_value: 期望值（对于exists/not_exists/type条件可留空）<br>
+                    enabled: 是否启用（true/false，默认true）<br>
+                    sort_order: 执行顺序（整数，默认按数组顺序）<br>
+                    示例：<br>
+                    [{"type": "status_code", "condition": "equals", "expected_value": 200},<br>
+                     {"type": "json_path", "target": "$.code", "condition": "equals", "expected_value": 0}]
+                </p>
+            </div>
+        </fieldset>
+
         <div class="button-group">
             <button type="submit">保存用例</button>
             <button type="button" class="back-btn" onclick="window.location.href='/'">返回列表</button>

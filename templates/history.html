@@ -53,10 +53,60 @@
             text-align: center;
             margin-top: 20px;
         }
+        .pagination {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .pagination button {
+            padding: 8px 15px;
+            background: #2094f3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+        .pagination button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .pagination span {
+            margin: 0 10px;
+        }
+        .date-filter {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .date-filter input[type="date"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .date-filter button {
+            padding: 8px 15px;
+            background: #2094f3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
     <h1>📜 测试历史记录</h1>
+    
+    <div class="date-filter">
+        <form method="GET">
+            <label for="date">选择日期:</label>
+            <input type="date" id="date" name="date" value="{{ date_filter }}">
+            <button type="submit">查询</button>
+            {% if date_filter %}
+                <a href="{{ url_for('history', page=1) }}" style="margin-left: 10px;">清除筛选</a>
+            {% endif %}
+        </form>
+    </div>
+    
     <div class="chart-container">
         <canvas id="trendChart"></canvas>
     </div>
@@ -83,9 +133,9 @@
                 <td>{{ run.duration }}</td>
                 <td>
                     {% if run.report_path %}
-                        <a href="{{ url_for('static', filename='reports/' + run.report_path) }}" target="_blank">查看</a>
+                    <a href="{{ url_for('static', filename='reports/' + run.report_path) }}" target="_blank">查看</a>
                     {% else %}
-                        无
+                    无
                     {% endif %}
                 </td>
             </tr>
@@ -94,6 +144,27 @@
             {% endfor %}
         </tbody>
     </table>
+    
+    <div class="pagination">
+        {% if has_prev %}
+            <a href="{{ url_for('history', page=page-1, date=date_filter) }}">
+                <button>上一页</button>
+            </a>
+        {% else %}
+            <button disabled>上一页</button>
+        {% endif %}
+        
+        <span>第 {{ page }} 页 / 共 {{ total_pages }} 页</span>
+        
+        {% if has_next %}
+            <a href="{{ url_for('history', page=page+1, date=date_filter) }}">
+                <button>下一页</button>
+            </a>
+        {% else %}
+            <button disabled>下一页</button>
+        {% endif %}
+    </div>
+    
     <p><a href="/">返回首页</a></p>
 
     <script>

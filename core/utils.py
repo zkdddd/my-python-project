@@ -83,6 +83,11 @@ def generate_html_report(run_data, cases_results, run_id):
         th {{ background: #4CAF50; color: white; }}
         tr:hover {{ background: #f5f5f5; }}
         .detail {{ background: #eee; padding: 10px; display: none; }}
+        .assertions-table {{ width: 100%; border-collapse: collapse; margin-top: 10px; }}
+        .assertions-table th, .assertions-table td {{ padding: 8px; text-align: left; border-bottom: 1px solid #eee; }}
+        .assertions-table th {{ background: #f2f2f2; }}
+        .assertion-pass {{ color: green; font-weight: bold; }}
+        .assertion-fail {{ color: red; font-weight: bold; }}
     </style>
 </head>
 <body>
@@ -109,8 +114,64 @@ def generate_html_report(run_data, cases_results, run_id):
             </tr>
             <tr id="detail_{idx}" class="detail">
                 <td colspan="5">
-                    <pre>错误信息: {r.get('error_message', '')}</pre>
-                    <pre>响应体: {r.get('response_body', '')}</pre>
+"""
+        # Add assertions details if available
+        if 'assertions' in r and r['assertions']:
+            html += f"""
+                    <div class="assertions-detail">
+                        <h4>断言结果</h4>
+                        <table class="assertions-table">
+                            <thead>
+                                <tr>
+                                    <th>类型</th>
+                                    <th>目标</th>
+                                    <th>条件</th>
+                                    <th>期望值</th>
+                                    <th>实际值</th>
+                                    <th>通过状态</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+"""
+            for ar in r['assertions']:
+                assertion = ar['assertion']
+                passed_class = 'assertion-pass' if ar['passed'] else 'assertion-fail'
+                passed_text = '通过' if ar['passed'] else '失败'
+                # Format actual value for display
+                actual_value = ar['actual_value']
+                if actual_value is None:
+                    actual_value_display = 'null'
+                elif isinstance(actual_value, (dict, list)):
+                    actual_value_display = json.dumps(actual_value, ensure_ascii=False)
+                else:
+                    actual_value_display = str(actual_value)
+                html += f"""
+                                <tr>
+                                    <td>{assertion.get('type', '')}</td>
+                                    <td>{assertion.get('target', '')}</td>
+                                    <td>{assertion.get('condition', '')}</td>
+                                    <td>{assertion.get('expected_value', '')}</td>
+                                    <td>{actual_value_display}</td>
+                                    <td class="{passed_class}">{passed_text}</td>
+                                </tr>
+"""
+            html += """
+                            </tbody>
+                        </table>
+                    </div>
+"""
+        # Keep the original error message and response body for backward compatibility
+        error_msg = r.get('error_message', '')
+        response_body = r.get('response_body', '')
+        if error_msg or response_body:
+            html += f"""
+                    <div class="original-error">
+                        <h4>原始错误信息和响应体</h4>
+                        <pre>错误信息: {error_msg}</pre>
+                        <pre>响应体: {response_body}</pre>
+                    </div>
+"""
+        html += f"""
                 </td>
             </tr>
 """

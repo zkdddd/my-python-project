@@ -6,7 +6,9 @@ from datetime import datetime
 from werkzeug.utils import secure_filename
 from models import init_db, add_case, get_all_cases, get_case, update_case, delete_case, add_data_source, \
     get_all_data_sources
-from models import add_test_run, get_test_runs, get_run_detail, get_run_statistics
+from models import add_test_run, get_test_runs, get_run_detail, get_run_statistics, \
+    get_test_runs_count, get_test_runs_with_pagination, get_test_runs_with_date_and_pagination, get_test_runs_count_with_date, \
+    add_assertions, get_assertions_by_case
 from core.api_test_runner import APITestRunner
 from core.utils import generate_html_report
 from config import DEBUG
@@ -39,7 +41,14 @@ def new_case():
         description = request.form.get('description', '')
         data_source_id = request.form.get('data_source_id', None)
         data_mapping = request.form.get('data_mapping', '')
-        add_case(name, method, url, headers, body, expected_status, expected_body, description,data_source_id,data_mapping)
+        assertions_json = request.form.get('assertions_json', '')
+        case_id = add_case(name, method, url, headers, body, expected_status, expected_body, description,data_source_id,data_mapping)
+        if case_id and assertions_json:
+            try:
+                assertions_list = json.loads(assertions_json)
+                add_assertions(case_id, assertions_list)
+            except json.JSONDecodeError:
+                pass  # Invalid JSON, ignore
         return redirect('/')
     data_sources = get_all_data_sources()
     return render_template('case_form.html', case=None,data_sources=data_sources)
@@ -58,10 +67,26 @@ def edit_case(case_id):
         description = request.form.get('description', '')
         data_source_id = request.form.get('data_source_id', None)
         data_mapping = request.form.get('data_mapping', '')
+        assertions_json = request.form.get('assertions_json', '')
         update_case(case_id, name, method, url, headers, body, expected_status, expected_body, description,data_source_id,data_mapping)
+        # Update assertions
+        if assertions_json:
+            try:
+                assertions_list = json.loads(assertions_json)
+                add_assertions(case_id, assertions_list)
+            except json.JSONDecodeError:
+                pass  # Invalid JSON, ignore
+        else:
+            # If no assertions provided, clear existing ones
+            add_assertions(case_id, [])
         return redirect('/')
+    # GET request: fetch assertions for the case
+    assertions = get_assertions_by_case(case_id)
+    # Convert assertions list to JSON string for the textarea
+    case_dict = dict(case)
+    case_dict['assertions_json'] = json.dumps(assertions) if assertions else ''
     data_sources = get_all_data_sources()
-    return render_template('case_form.html', case=case,data_sources = data_sources)
+    return render_template('case_form.html', case=case_dict,data_sources = data_sources)
 
 @app.route('/case/<int:case_id>/delete')
 def delete_case_route(case_id):
@@ -151,10 +176,37 @@ def run_test():
     return jsonify({'report_url': report_url})
 
 @app.route('/history')
-def history():
-    runs = get_test_runs(100)
+@app.route('/history/<int:page>')
+def history(page=1):
+    # Get date filter from query parameters
+    date_filter = request.args.get('date', '')
+    
+    # Pagination settings
+    per_page = 15
+    offset = (page - 1) * per_page
+    
+    # Get runs with pagination and optional date filter
+    if date_filter:
+        runs = get_test_runs_with_date_and_pagination(date_filter, per_page, offset)
+        total_runs = get_test_runs_count_with_date(date_filter)
+    else:
+        runs = get_test_runs_with_pagination(per_page, offset)
+        total_runs = get_test_runs_count()
+    
+    # Calculate pagination info
+    total_pages = (total_runs + per_page - 1) // per_page
+    has_prev = page > 1
+    has_next = page < total_pages
+    
     stats = get_run_statistics(30)  # 最近30天趋势
-    return render_template('history.html', runs=runs, stats=stats)
+    return render_template('history.html', 
+                         runs=runs, 
+                         stats=stats,
+                         page=page,
+                         total_pages=total_pages,
+                         has_prev=has_prev,
+                         has_next=has_next,
+                         date_filter=date_filter)
 
 @app.route('/report/<int:run_id>')
 def view_report(run_id):

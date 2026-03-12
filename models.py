@@ -52,6 +52,20 @@ def init_db():
               created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
           )
       ''')
+    # 断言表
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS assertions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            case_id INTEGER NOT NULL,
+            type TEXT NOT NULL,           -- 断言类型：status_code, json_path, header, response_time, regex
+            target TEXT,                   -- 断言目标：JSONPath路径、头部名称等（对status_code和response_time可为空）
+            condition TEXT NOT NULL,       -- 条件：equals, contains, gt, exists...
+            expected_value TEXT,            -- 期望值（可为空，如 exists 条件不需要值）
+            enabled INTEGER DEFAULT 1,      -- 是否启用
+            sort_order INTEGER DEFAULT 0,   -- 执行顺序
+            FOREIGN KEY(case_id) REFERENCES test_cases(id) ON DELETE CASCADE
+        )
+    ''')
     try:
         c.execute('ALTER TABLE test_cases ADD COLUMN data_source_id INTEGER')
     except:
@@ -88,13 +102,13 @@ def get_case(case_id):
     conn.close()
     return case
 
-def update_case(case_id, name, method, url, headers, body, expected_status, expected_body, description,data_source_id=None,data_mapping=''):
+def update_case(case_id, name, method, url, headers, body, expected_status, expected_body, description, data_source_id=None, data_mapping=''):
     conn = get_db_connection()
     conn.execute('''
         UPDATE test_cases
-        SET name=?, method=?, url=?, headers=?, body=?, expected_status=?, expected_body=?, description=?,data_source_id=?,data_mapping=?,
+        SET name=?, method=?, url=?, headers=?, body=?, expected_status=?, expected_body=?, description=?, data_source_id=?, data_mapping=?
         WHERE id=?
-    ''', (name, method, url, headers, body, expected_status, expected_body, description, case_id,data_source_id,data_mapping))
+    ''', (name, method, url, headers, body, expected_status, expected_body, description, data_source_id, data_mapping, case_id))
     conn.commit()
     conn.close()
 
@@ -128,6 +142,43 @@ def get_test_runs(limit=50):
     ''', (limit,)).fetchall()
     conn.close()
     return runs
+
+def get_test_runs_count():
+    conn = get_db_connection()
+    count = conn.execute('SELECT COUNT(*) FROM test_runs').fetchone()[0]
+    conn.close()
+    return count
+
+def get_test_runs_with_pagination(limit, offset):
+    conn = get_db_connection()
+    runs = conn.execute('''
+        SELECT r.*, c.name as case_name
+        FROM test_runs r
+        JOIN test_cases c ON r.case_id = c.id
+        ORDER BY r.id DESC
+        LIMIT ? OFFSET ?
+    ''', (limit, offset)).fetchall()
+    conn.close()
+    return runs
+
+def get_test_runs_with_date_and_pagination(date_filter, limit, offset):
+    conn = get_db_connection()
+    runs = conn.execute('''
+        SELECT r.*, c.name as case_name
+        FROM test_runs r
+        JOIN test_cases c ON r.case_id = c.id
+        WHERE date(r.start_time) = ?
+        ORDER BY r.id DESC
+        LIMIT ? OFFSET ?
+    ''', (date_filter, limit, offset)).fetchall()
+    conn.close()
+    return runs
+
+def get_test_runs_count_with_date(date_filter):
+    conn = get_db_connection()
+    count = conn.execute('SELECT COUNT(*) FROM test_runs WHERE date(start_time) = ?', (date_filter,)).fetchone()[0]
+    conn.close()
+    return count
 
 def get_run_detail(run_id):
     conn = get_db_connection()
@@ -177,3 +228,58 @@ def get_data_source(source_id):
     source = conn.execute('SELECT * FROM data_sources WHERE id = ?', (source_id,)).fetchone()
     conn.close()
     return source
+
+# ---------- 断言操作 ----------
+def add_assertions(case_id, assertions_list):
+    """
+    添加断言列表，先删除旧断言，再插入新断言
+    assertions_list: 列表，每个元素为断言字典
+    """
+    conn = get_db_connection()
+    c = conn.cursor()
+    # 删除旧断言
+    c.execute('DELETE FROM assertions WHERE case_id = ?', (case_id,))
+    # 插入新断言
+    for idx, assertion in enumerate(assertions_list):
+        c.execute('''
+            INSERT INTO assertions (case_id, type, target, condition, expected_value, enabled, sort_order)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            case_id,
+            assertion.get('type'),
+            assertion.get('target', ''),
+            assertion.get('condition'),
+            assertion.get('expected_value', ''),
+            1 if assertion.get('enabled', True) else 0,
+            assertion.get('sort_order', idx)
+        ))
+    conn.commit()
+    conn.close()
+
+def get_assertions_by_case(case_id):
+    """
+    获取指定用例的断言列表，按 sort_order 排序
+    返回列表，每个元素为断言字典
+    """
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute('''
+        SELECT id, type, target, condition, expected_value, enabled, sort_order
+        FROM assertions
+        WHERE case_id = ?
+        ORDER BY sort_order
+    ''', (case_id,))
+    rows = c.fetchall()
+    conn.close()
+    assertions = []
+    for row in rows:
+        assertions.append({
+            'id': row['id'],
+            'type': row['type'],
+            'target': row['target'],
+            'condition': row['condition'],
+            'expected_value': row['expected_value'],
+            'enabled': bool(row['enabled']),
+            'sort_order': row['sort_order']
+        })
+    return assertions
