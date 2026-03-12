@@ -19,6 +19,7 @@ config.local.py
 secrets.py
 opencode.json
 
+
 # IDE配置
 .vscode/
 .idea/
@@ -63,3 +64,5 @@ desktop.ini
 .python-version
 .mypy_cache/
 .ruff_cache/
+
+static/reports/
