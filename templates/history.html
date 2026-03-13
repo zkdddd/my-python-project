@@ -1,198 +1,379 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>测试历史</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.15);
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            font-family: Arial, sans-serif;
-            margin: 30px;
-            background-color: #f4f4f4;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            color: #1e293b;
         }
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 20px;
+        
+        .navbar {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow-sm);
         }
-        .chart-container {
-            width: 600px;
-            margin: 30px auto;
+        
+        .navbar-brand {
+            font-size: 1.35rem;
+            font-weight: 700;
+            background: var(--bg-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 0 auto;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        
+        .glass-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin: 2rem auto;
+            box-shadow: var(--shadow-lg);
+            max-width: 1200px;
         }
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+        
+        .page-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
-        th {
-            background: #2094f3;
-            color: white;
+        
+        .page-title i { color: var(--primary); }
+        
+        .filter-card {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
-        .pass {
-            color: green;
-            font-weight: bold;
+        
+        .filter-card input[type="date"] {
+            padding: 0.6rem 1rem;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
         }
-        .fail {
-            color: red;
-            font-weight: bold;
+        
+        .filter-card input[type="date"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
         }
-        a {
-            text-decoration: none;
-            color: #2196F3;
-        }
-        p {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .pagination {
-            margin: 20px 0;
-            text-align: center;
-        }
-        .pagination button {
-            padding: 8px 15px;
-            background: #2094f3;
+        
+        .filter-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             border: none;
-            border-radius: 4px;
+            padding: 0.6rem 1.5rem;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
             cursor: pointer;
-            margin: 0 5px;
+            transition: var(--transition);
         }
-        .pagination button:disabled {
-            background: #ccc;
+        
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+        
+        .clear-btn {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.6rem 1rem;
+        }
+        
+        .clear-btn:hover { text-decoration: underline; }
+        
+        .table-card {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .table thead th {
+            background: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-weight: 600;
+        }
+        
+        .table tbody tr {
+            transition: var(--transition);
+        }
+        
+        .table tbody tr:hover {
+            background: rgba(99, 102, 241, 0.05);
+        }
+        
+        .table td {
+            padding: 1rem;
+            vertical-align: middle;
+        }
+        
+        .status-badge {
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-pass { background: #d1fae5; color: #059669; }
+        .status-fail { background: #fee2e2; color: #dc2626; }
+        
+        .view-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: var(--transition);
+        }
+        
+        .view-link:hover {
+            color: var(--primary-dark);
+            transform: translateX(3px);
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+        
+        .pagination a, .pagination button {
+            padding: 0.6rem 1.25rem;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: var(--radius-sm);
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .pagination a:hover, .pagination button:hover:not(:disabled) {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .pagination button:disabled, .pagination a.disabled {
+            background: #f1f5f9;
+            color: #94a3b8;
             cursor: not-allowed;
         }
-        .pagination span {
-            margin: 0 10px;
+        
+        .pagination span { padding: 0 1rem; color: #64748b; font-weight: 500; }
+        
+        .bottom-nav { text-align: center; margin-top: 2rem; }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: var(--radius-md);
+            transition: var(--transition);
         }
-        .date-filter {
-            margin: 20px 0;
-            text-align: center;
-        }
-        .date-filter input[type="date"] {
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .date-filter button {
-            padding: 8px 15px;
-            background: #2094f3;
+        
+        .back-btn:hover {
+            background: var(--primary);
             color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-left: 10px;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .glass-container { animation: fadeInUp 0.5s ease-out; }
+        
+        @media (max-width: 768px) {
+            .glass-container { margin: 1rem; padding: 1.25rem; }
+            .filter-card { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
 <body>
-    <h1>📜 测试历史记录</h1>
+    <nav class="navbar">
+        <span class="navbar-brand"><i class="fas fa-history"></i> 测试历史记录</span>
+    </nav>
     
-    <div class="date-filter">
-        <form method="GET">
-            <label for="date">选择日期:</label>
-            <input type="date" id="date" name="date" value="{{ date_filter }}">
-            <button type="submit">查询</button>
-            {% if date_filter %}
-                <a href="{{ url_for('history', page=1) }}" style="margin-left: 10px;">清除筛选</a>
-            {% endif %}
-        </form>
-    </div>
-    
-    <div class="chart-container">
-        <canvas id="trendChart"></canvas>
-    </div>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>用例名称</th>
-                <th>状态</th>
-                <th>响应码</th>
-                <th>开始时间</th>
-                <th>耗时(秒)</th>
-                <th>报告</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for run in runs %}
-            <tr>
-                <td>{{ run.id }}</td>
-                <td>{{ run.case_name }}</td>
-                <td class="{{ 'pass' if run.status == 'PASS' else 'fail' }}">{{ run.status }}</td>
-                <td>{{ run.response_status }}</td>
-                <td>{{ run.start_time }}</td>
-                <td>{{ run.duration }}</td>
-                <td>
-                    {% if run.report_path %}
-                    <a href="{{ url_for('static', filename='reports/' + run.report_path) }}" target="_blank">查看</a>
+    <div class="glass-container">
+        <div class="page-title"><i class="fas fa-chart-line"></i> 通过率趋势</div>
+        <div class="table-card" style="padding: 1.5rem; margin-bottom: 1.5rem;">
+            <canvas id="trendChart" style="height: 250px;"></canvas>
+        </div>
+        
+        <div class="filter-card">
+            <form method="GET" style="display:flex;align-items:center;gap:1rem;flex:1;flex-wrap:wrap;">
+                <label style="font-weight:500;color:#64748b;">选择日期:</label>
+                <input type="date" id="date" name="date" value="{{ date_filter }}">
+                <button type="submit" class="filter-btn"><i class="fas fa-search"></i> 查询</button>
+                {% if date_filter %}
+                <a href="{{ url_for('history', page=1) }}" class="clear-btn"><i class="fas fa-times"></i> 清除筛选</a>
+                {% endif %}
+            </form>
+        </div>
+        
+        <div class="page-title"><i class="fas fa-list"></i> 运行记录</div>
+        
+        <div class="table-card">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>用例名称</th>
+                        <th>状态</th>
+                        <th>响应码</th>
+                        <th>开始时间</th>
+                        <th>耗时(秒)</th>
+                        <th>报告</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for run in runs %}
+                    <tr>
+                        <td><span class="text-muted">#{{ run.id }}</span></td>
+                        <td><strong>{{ run.case_name }}</strong></td>
+                        <td>
+                            {% if run.status == 'PASS' %}
+                            <span class="status-badge status-pass"><i class="fas fa-check"></i> PASS</span>
+                            {% else %}
+                            <span class="status-badge status-fail"><i class="fas fa-times"></i> FAIL</span>
+                            {% endif %}
+                        </td>
+                        <td><span class="badge bg-secondary bg-opacity-10">{{ run.response_status }}</span></td>
+                        <td><code style="font-size:0.85rem;color:#64748b;">{{ run.start_time }}</code></td>
+                        <td><span class="text-muted">{{ run.duration }}s</span></td>
+                        <td>
+                            {% if run.report_path %}
+                            <a href="{{ url_for('static', filename='reports/' + run.report_path) }}" target="_blank" class="view-link">
+                                <i class="fas fa-eye"></i> 查看
+                            </a>
+                            {% else %}
+                            <span class="text-muted">无</span>
+                            {% endif %}
+                        </td>
+                    </tr>
                     {% else %}
-                    无
-                    {% endif %}
-                </td>
-            </tr>
+                    <tr>
+                        <td colspan="7" style="text-align:center;padding:3rem;color:#64748b;">
+                            <i class="fas fa-inbox" style="font-size:2.5rem;margin-bottom:1rem;opacity:0.5;"></i>
+                            <p>暂无运行记录</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="pagination">
+            {% if has_prev %}
+            <a href="{{ url_for('history', page=page-1, date=date_filter) }}"><i class="fas fa-chevron-left"></i> 上一页</a>
             {% else %}
-            <tr><td colspan="7">暂无运行记录</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    
-    <div class="pagination">
-        {% if has_prev %}
-            <a href="{{ url_for('history', page=page-1, date=date_filter) }}">
-                <button>上一页</button>
-            </a>
-        {% else %}
-            <button disabled>上一页</button>
-        {% endif %}
+            <a class="disabled">上一页</a>
+            {% endif %}
+            
+            <span>第 {{ page }} 页 / 共 {{ total_pages }} 页</span>
+            
+            {% if has_next %}
+            <a href="{{ url_for('history', page=page+1, date=date_filter) }}">下一页 <i class="fas fa-chevron-right"></i></a>
+            {% else %}
+            <a class="disabled">下一页</a>
+            {% endif %}
+        </div>
         
-        <span>第 {{ page }} 页 / 共 {{ total_pages }} 页</span>
-        
-        {% if has_next %}
-            <a href="{{ url_for('history', page=page+1, date=date_filter) }}">
-                <button>下一页</button>
-            </a>
-        {% else %}
-            <button disabled>下一页</button>
-        {% endif %}
+        <div class="bottom-nav">
+            <a href="/" class="back-btn"><i class="fas fa-home"></i> 返回首页</a>
+        </div>
     </div>
-    
-    <p><a href="/">返回首页</a></p>
 
     <script>
-        // 绘制趋势图
         var ctx = document.getElementById('trendChart').getContext('2d');
         var stats = {{ stats|tojson }};
         var dates = stats.map(s => s.date);
         var passRates = stats.map(s => (s.total > 0 ? (s.passed / s.total * 100).toFixed(1) : 0));
 
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: dates,
-                datasets: [{
-                    label: '通过率 (%)',
-                    data: passRates,
-                    borderColor: '#4CAF50',
-                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: { min: 0, max: 100 }
+        if (dates.length > 0) {
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: '通过率 (%)',
+                        data: passRates,
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#6366f1',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { min: 0, max: 100, grid: { color: 'rgba(0,0,0,0.05)' } },
+                        x: { grid: { display: false } }
+                    }
                 }
-            }
-        });
+            });
+        }
     </script>
 </body>
 </html>

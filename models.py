@@ -58,12 +58,28 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             case_id INTEGER NOT NULL,
             type TEXT NOT NULL,           -- 断言类型：status_code, json_path, header, response_time, regex
-            target TEXT,                   -- 断言目标：JSONPath路径、头部名称等（对status_code和response_time可为空）
+            target TEXT,                   -- 断言目标：JSONPath 路径、头部名称等（对 status_code 和 response_time 可为空）
             condition TEXT NOT NULL,       -- 条件：equals, contains, gt, exists...
             expected_value TEXT,            -- 期望值（可为空，如 exists 条件不需要值）
             enabled INTEGER DEFAULT 1,      -- 是否启用
             sort_order INTEGER DEFAULT 0,   -- 执行顺序
             FOREIGN KEY(case_id) REFERENCES test_cases(id) ON DELETE CASCADE
+        )
+    ''')
+    # 报告批次表
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS reports (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            batch_id TEXT NOT NULL,                -- 批次标识（如时间戳 YYYYMMDD_HHMMSS）
+            start_time TIMESTAMP,
+            end_time TIMESTAMP,
+            total_cases INTEGER,
+            passed INTEGER,
+            failed INTEGER,
+            pass_rate REAL,
+            trigger_type TEXT DEFAULT 'manual',     -- manual / scheduled / ci
+            file_path TEXT,                         -- 生成的 HTML 报告相对路径
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ''')
     try:
@@ -283,3 +299,57 @@ def get_assertions_by_case(case_id):
             'sort_order': row['sort_order']
         })
     return assertions
+
+# ---------- 报告批次操作 ----------
+def add_report(batch_id, start_time, end_time, total_cases, passed, failed, pass_rate, trigger_type='manual', file_path=''):
+    """添加报告批次记录"""
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute('''
+        INSERT INTO reports (batch_id, start_time, end_time, total_cases, passed, failed, pass_rate, trigger_type, file_path)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (batch_id, start_time, end_time, total_cases, passed, failed, pass_rate, trigger_type, file_path))
+    conn.commit()
+    report_id = c.lastrowid
+    conn.close()
+    return report_id
+
+def get_all_reports(limit=50):
+    """获取所有报告批次，按时间倒序"""
+    conn = get_db_connection()
+    reports = conn.execute('''
+        SELECT * FROM reports
+        ORDER BY id DESC
+        LIMIT ?
+    ''', (limit,)).fetchall()
+    conn.close()
+    return reports
+
+def get_report(report_id):
+    """获取指定报告详情"""
+    conn = get_db_connection()
+    report = conn.execute('SELECT * FROM reports WHERE id = ?', (report_id,)).fetchone()
+    conn.close()
+    return report
+
+def delete_report(report_id):
+    """删除报告批次记录"""
+    conn = get_db_connection()
+    conn.execute('DELETE FROM reports WHERE id = ?', (report_id,))
+    conn.commit()
+    conn.close()
+
+def get_report_trend(days=30):
+    """获取最近 days 天的报告通过率趋势"""
+    conn = get_db_connection()
+    rows = conn.execute('''
+        SELECT date(created_at) as report_date,
+               AVG(pass_rate) as avg_pass_rate,
+               COUNT(*) as report_count
+        FROM reports
+        WHERE created_at >= date('now', ?)
+        GROUP BY report_date
+        ORDER BY report_date
+    ''', (f'-{days} days',)).fetchall()
+    conn.close()
+    return [{'date': r['report_date'], 'avg_pass_rate': r['avg_pass_rate'], 'report_count': r['report_count']} for r in rows]

@@ -5,10 +5,11 @@ import time
 from datetime import datetime
 from werkzeug.utils import secure_filename
 from models import init_db, add_case, get_all_cases, get_case, update_case, delete_case, add_data_source, \
-    get_all_data_sources
+    get_all_data_sources, get_db_connection
 from models import add_test_run, get_test_runs, get_run_detail, get_run_statistics, \
     get_test_runs_count, get_test_runs_with_pagination, get_test_runs_with_date_and_pagination, get_test_runs_count_with_date, \
     add_assertions, get_assertions_by_case
+from models import add_report, get_all_reports, get_report, delete_report, get_report_trend
 from core.api_test_runner import APITestRunner
 from core.utils import generate_html_report
 from config import DEBUG
@@ -164,15 +165,40 @@ def run_test():
         run_ids.append(run_id)
 
     # 生成本次运行的总体报告（假设一次批量运行生成一个报告）
-    # 为简化，我们为每个运行单独生成报告，但也可以聚合。这里使用第一个 run_id 作为批次ID
-    batch_id = run_ids[0] if run_ids else int(time.time())
+    # 为简化，我们为每个运行单独生成报告，但也可以聚合。这里使用第一个 run_id 作为批次 ID
+    batch_id = int(time.time())
     report_file = generate_html_report(
-        run_data={'start_time': results[0]['start_time'], 'end_time': results[-1]['end_time']},
+        run_data={
+            'start_time': results[0]['start_time'], 
+            'end_time': results[-1]['end_time'],
+            'batch_id': batch_id
+        },
         cases_results=results,
         run_id=batch_id
     )
+    
+    # 计算统计数据
+    total = len(results)
+    passed = sum(1 for r in results if r['status'] == 'PASS')
+    failed = total - passed
+    pass_rate = (passed / total * 100) if total > 0 else 0
+    
+    # 保存报告批次记录到数据库
+    report_path = f'reports/{report_file}'
+    add_report(
+        batch_id=str(batch_id),
+        start_time=results[0]['start_time'],
+        end_time=results[-1]['end_time'],
+        total_cases=total,
+        passed=passed,
+        failed=failed,
+        pass_rate=pass_rate,
+        trigger_type='manual',
+        file_path=report_path
+    )
+    
     # 可选：更新每条记录的 report_path
-    report_url = url_for('static', filename=f'reports/{report_file}')
+    report_url = url_for('static', filename=report_path)
     return jsonify({'report_url': report_url})
 
 @app.route('/history')
@@ -217,6 +243,59 @@ def view_report(run_id):
         report_url = url_for('static', filename='reports/' + run['report_path'])
         return redirect(report_url)
     return "报告不存在", 404
+
+@app.route('/reports')
+@app.route('/reports/<int:page>')
+def reports_history(page=1):
+    """历史报告列表页面"""
+    # Pagination settings
+    per_page = 20
+    offset = (page - 1) * per_page
+    
+    # Get reports with pagination
+    conn = get_db_connection()
+    reports = conn.execute('''
+        SELECT * FROM reports
+        ORDER BY id DESC
+        LIMIT ? OFFSET ?
+    ''', (per_page, offset)).fetchall()
+    
+    # Get total count (before closing connection)
+    total_reports = conn.execute('SELECT COUNT(*) FROM reports').fetchone()[0]
+    conn.close()
+    
+    # Calculate pagination
+    total_pages = (total_reports + per_page - 1) // per_page
+    
+    # Get trend data
+    trend = get_report_trend(30)
+    
+    return render_template('reports_history.html', 
+                         reports=reports, 
+                         page=page,
+                         total_pages=total_pages,
+                         has_prev=page > 1,
+                         has_next=page < total_pages,
+                         trend=trend)
+
+@app.route('/report/download/<int:report_id>')
+def download_report(report_id):
+    """下载报告 JSON 数据"""
+    report = get_report(report_id)
+    if not report:
+        return jsonify({'error': '报告不存在'}), 404
+    
+    # 从数据库加载对应的测试结果（这里简化处理，实际应该存储完整结果）
+    return jsonify({
+        'report': dict(report),
+        'message': 'JSON 导出功能需要存储完整测试结果数据'
+    })
+
+@app.route('/report/delete/<int:report_id>', methods=['POST'])
+def delete_report_route(report_id):
+    """删除报告"""
+    delete_report(report_id)
+    return jsonify({'success': True})
 
 # 在 app.py 中添加上传路由
 @app.route('/data_source/new', methods=['GET', 'POST'])
